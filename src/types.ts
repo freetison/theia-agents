@@ -51,8 +51,21 @@ const BuildOrBuyItemSchema = z.object({
 const TechStackSchema = z.object({
   frontend: flexString,
   backend: flexString,
+  db: flexString,
   infra: flexString,
+  tools: flexString.optional(),
   ai_ml: flexString.optional(),
+});
+
+const ScalabilityTierSchema = z.object({
+  range: flexString,
+  approach: flexString,
+});
+
+const EffortEstimationSchema = z.object({
+  mvp: flexString,
+  three_months: flexString,
+  six_months: flexString,
 });
 
 export const SoftwareArchitectOutputSchema = z.object({
@@ -68,7 +81,14 @@ export const SoftwareArchitectOutputSchema = z.object({
   mvp_scope: flexStringArray,
   architecture_approach: flexString,
   estimated_team: flexStringArray,
-  estimated_time_to_mvp: flexString,
+  effort_estimation: z.preprocess(
+    (v) => (v !== null && typeof v === "object" ? v : {}),
+    EffortEstimationSchema
+  ),
+  scalability_plan: z.preprocess(
+    (v) => (Array.isArray(v) ? v : []),
+    z.array(ScalabilityTierSchema)
+  ),
   technical_risks: flexStringArray,
   existing_tools_to_evaluate: flexStringArray,
   confidence: z.number().min(0).max(1),
@@ -121,6 +141,117 @@ export const GrowthHackerOutputSchema = z.object({
   confidence: z.number().min(0).max(1),
 });
 export type GrowthHackerOutput = z.infer<typeof GrowthHackerOutputSchema>;
+
+// ─── Salida: Marketing Strategist ───────────────────────────────────────────
+export const MarketingStrategistOutputSchema = z.object({
+  agent_name: z.string().default("marketing_strategist"),
+  positioning: flexString,
+  target_audiences: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  messaging_framework: z.any(),
+  go_to_market: z.any(),
+  content_strategy: z.any(),
+  campaign_ideas: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  budget_allocation: z.any(),
+  risks: flexStringArray,
+  assumptions: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type MarketingStrategistOutput = z.infer<typeof MarketingStrategistOutputSchema>;
+
+// ─── Salida: Product Manager ──────────────────────────────────────────────────
+export const ProductManagerOutputSchema = z.object({
+  agent_name: z.string().default("product_manager"),
+  mvp_features: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  roadmap_quarters: z.any(),
+  user_stories: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  success_metrics: z.any(),
+  tradeoffs: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type ProductManagerOutput = z.infer<typeof ProductManagerOutputSchema>;
+
+// ─── Salida: Sales Lead ────────────────────────────────────────────────────────
+export const SalesLeadOutputSchema = z.object({
+  agent_name: z.string().default("sales_lead"),
+  sales_strategy: z.any(),
+  outbound_playbook: z.any(),
+  inbound_tactics: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  hiring_plan: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  pipeline_projection: z.any(),
+  sales_enablement: z.any(),
+  confidence: z.number().min(0).max(1),
+});
+export type SalesLeadOutput = z.infer<typeof SalesLeadOutputSchema>;
+
+// ─── Salida: CFO Finance ───────────────────────────────────────────────────────
+export const CFOFinanceOutputSchema = z.object({
+  agent_name: z.string().default("cfo_finance"),
+  projections_3yr: z.any(),
+  unit_economics: z.any(),
+  burn_rate_scenarios: z.any(),
+  metrics_projection: z.any(),
+  fundraising_plan: z.any(),
+  break_even: z.any(),
+  risks: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type CFOFinanceOutput = z.infer<typeof CFOFinanceOutputSchema>;
+
+// ─── Salida: Legal Expert ──────────────────────────────────────────────────────
+export const LegalExpertOutputSchema = z.object({
+  agent_name: z.string().default("legal_expert"),
+  gdpr_obligations: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  legal_documents: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  compliance_requirements: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  ip_risks: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  data_residency: z.any(),
+  launch_checklist: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  risks: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  confidence: z.number().min(0).max(1),
+});
+export type LegalExpertOutput = z.infer<typeof LegalExpertOutputSchema>;
+
+// ─── Salida: CXO Designer ──────────────────────────────────────────────────────
+export const CXODesignerOutputSchema = z.object({
+  agent_name: z.string().default("cxo_designer"),
+  user_personas: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  user_journey: z.any(),
+  onboarding_flow: z.any(),
+  information_architecture: z.any(),
+  ux_research_plan: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  accessibility: z.any(),
+  risks: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type CXODesignerOutput = z.infer<typeof CXODesignerOutputSchema>;
+
+// ─── Salida: Customer Success ─────────────────────────────────────────────────
+export const CustomerSuccessOutputSchema = z.object({
+  agent_name: z.string().default("customer_success"),
+  retention_strategy: z.any(),
+  nps_program: z.any(),
+  churn_reduction_playbook: z.any(),
+  expansion_strategy: z.any(),
+  metrics_projection: z.any(),
+  cs_team_structure: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  risks: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type CustomerSuccessOutput = z.infer<typeof CustomerSuccessOutputSchema>;
+
+// ─── Salida: Competitor Analyst ───────────────────────────────────────────────
+export const CompetitorAnalystOutputSchema = z.object({
+  agent_name: z.string().default("competitor_analyst"),
+  competitors: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  features_matrix: z.any(),
+  pricing_analysis: z.any(),
+  positioning_gaps: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  swot: z.any(),
+  battle_cards: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
+  risks: flexStringArray,
+  confidence: z.number().min(0).max(1),
+});
+export type CompetitorAnalystOutput = z.infer<typeof CompetitorAnalystOutputSchema>;
 
 // ─── Salida: Synthesizer (Facilitador — veredicto final) ──────────────────────
 export const FinalReportSchema = z.object({

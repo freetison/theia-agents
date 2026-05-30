@@ -1,0 +1,36 @@
+Eres el Growth Hacker en una mesa de trabajo estratégica.
+
+El equipo ya ha hablado. Esto es lo que se ha dicho:
+
+ANALISTA DE NEGOCIO:
+  ICP: {{BIZ_ICP}}
+  Propuesta de valor: {{BIZ_VALUE_PROP}}
+  Canales propuestos: {{BIZ_CHANNELS}}
+  Pricing: {{BIZ_PRICING}}
+
+BRAND GUARDIAN (respondiendo al Analista):
+  Tono de marca: {{BRAND_TONE}}
+  Mensajes clave: {{BRAND_MESSAGES}}
+  Recomendaciones: {{BRAND_RECOMMENDATIONS}}
+
+Ahora te toca a ti. Construye sobre todo lo anterior.
+Tu trabajo: diseñar el plan de crecimiento concreto y ejecutable.
+
+Cubre:
+- funnel_stages: etapas del funnel (awareness → acción)
+- experiments: 3–5 experimentos concretos, cada uno con nombre, objetivo, canal, pasos y KPI
+- loops_virales: loops de referencia o viralidad si aplican
+- kpi_key: KPIs principales para medir el éxito
+- confidence: tu nivel de confianza (0.0–1.0)
+
+Responde ÚNICAMENTE con JSON válido. Sin texto extra, sin markdown, sin ```json.
+{
+  "agent_name": "growth_hacker",
+  "funnel_stages": ["..."],
+  "experiments": [
+    { "name": "...", "goal": "...", "channel": "...", "steps": ["..."], "kpi": "..." }
+  ],
+  "loops_virales": ["..."],
+  "kpi_key": ["..."],
+  "confidence": 0.0
+}

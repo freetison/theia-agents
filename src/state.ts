@@ -5,6 +5,14 @@ import type {
   SoftwareArchitectOutput,
   BrandGuardianOutput,
   GrowthHackerOutput,
+  MarketingStrategistOutput,
+  ProductManagerOutput,
+  SalesLeadOutput,
+  CFOFinanceOutput,
+  LegalExpertOutput,
+  CXODesignerOutput,
+  CustomerSuccessOutput,
+  CompetitorAnalystOutput,
   FinalReport,
 } from "./types.js";
 
@@ -38,6 +46,39 @@ export const GraphState = Annotation.Root({
     default: () => null,
   }),
   growthOutput: Annotation<GrowthHackerOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+
+  marketingOutput: Annotation<MarketingStrategistOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  productOutput: Annotation<ProductManagerOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  salesOutput: Annotation<SalesLeadOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  cfoOutput: Annotation<CFOFinanceOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  legalOutput: Annotation<LegalExpertOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  cxoOutput: Annotation<CXODesignerOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  csOutput: Annotation<CustomerSuccessOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  competitorOutput: Annotation<CompetitorAnalystOutput | null>({
     reducer: (_prev, next) => next,
     default: () => null,
   }),

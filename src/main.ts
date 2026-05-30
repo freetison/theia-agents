@@ -1,13 +1,9 @@
 import { buildGraph } from "./graph.js";
+import { loadProblem } from "./config.js";
 
-const DEFAULT_PROBLEM = `
-Evaluar el mercado B2B SaaS para Theia Platform en España y LATAM.
-Necesito: ICP ideal, propuesta de valor, pricing sugerido, canales de venta recomendados,
-y riesgos principales.
-`.trim();
-
-// Acepta el problema como argumento CLI: tsx src/main.ts "Mi idea de negocio aquí"
-const problem = process.argv[2] ?? DEFAULT_PROBLEM;
+// Acepta el problema como argumento CLI: npm start "Mi idea de negocio aquí"
+// Si no se pasa, lee config/problem.txt
+const problem = process.argv[2] ?? loadProblem();
 
 async function main() {
   console.log("╔══════════════════════════════════════════════════════╗");
