@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { GrowthHackerOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -11,7 +11,7 @@ export async function growthHackerNode(
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
   if (!state.brandOutput) throw new Error("brandOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("growth_hacker", {
+  const raw = await llmGenerate("growth_hacker", loadPrompt("growth_hacker", {
     BIZ_ICP: state.bizOutput.icp,
     BIZ_VALUE_PROP: state.bizOutput.value_proposition,
     BIZ_CHANNELS: state.bizOutput.channels_recommended.join(", "),

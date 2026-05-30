@@ -1,0 +1,22 @@
+{
+  "_comment": "Matriz agente → proveedor/modelo. Cambia aquí para usar distintos LLMs por agente.",
+  "default": {
+    "provider": "ollama",
+    "model": "llama3.2"
+  },
+  "agents": {
+    "biz_evaluator":        { "provider": "ollama", "model": "llama3.2" },
+    "brand_guardian":       { "provider": "ollama", "model": "llama3.2" },
+    "growth_hacker":        { "provider": "ollama", "model": "llama3.2" },
+    "software_architect":   { "provider": "ollama", "model": "llama3.2" },
+    "marketing_strategist": { "provider": "ollama", "model": "llama3.2" },
+    "product_manager":      { "provider": "ollama", "model": "llama3.2" },
+    "sales_lead":           { "provider": "ollama", "model": "llama3.2" },
+    "cfo_finance":          { "provider": "ollama", "model": "llama3.2" },
+    "legal_expert":         { "provider": "ollama", "model": "llama3.2" },
+    "cxo_designer":         { "provider": "ollama", "model": "llama3.2" },
+    "customer_success":     { "provider": "ollama", "model": "llama3.2" },
+    "competitor_analyst":   { "provider": "ollama", "model": "llama3.2" },
+    "synthesizer":          { "provider": "ollama", "model": "llama3.2" }
+  }
+}

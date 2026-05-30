@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { MarketingStrategistOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -12,7 +12,7 @@ export async function marketingStrategistNode(
   if (!state.brandOutput) throw new Error("brandOutput no disponible");
   if (!state.growthOutput) throw new Error("growthOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("marketing_strategist", {
+  const raw = await llmGenerate("marketing_strategist", loadPrompt("marketing_strategist", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),
     GROWTH_OUTPUT: JSON.stringify(state.growthOutput, null, 2),

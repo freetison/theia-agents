@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { CompetitorAnalystOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -12,7 +12,7 @@ export async function competitorAnalystNode(
   if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
   if (!state.salesOutput) throw new Error("salesOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("competitor_analyst", {
+  const raw = await llmGenerate("competitor_analyst", loadPrompt("competitor_analyst", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     MARKETING_OUTPUT: JSON.stringify(state.marketingOutput, null, 2),
     SALES_OUTPUT: JSON.stringify(state.salesOutput, null, 2),

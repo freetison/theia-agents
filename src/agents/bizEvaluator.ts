@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { BizEvaluatorOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -8,7 +8,7 @@ export async function bizEvaluatorNode(
 ): Promise<Partial<TheiaState>> {
   console.log("\n🧑‍💼  [Analista de Negocio] Tomando la palabra...");
 
-  const raw = await ollamaGenerate(loadPrompt("biz_evaluator", { PROBLEM: state.problem }));
+  const raw = await llmGenerate("biz_evaluator", loadPrompt("biz_evaluator", { PROBLEM: state.problem }));
   const parsed = BizEvaluatorOutputSchema.parse(extractJson(raw));
 
   console.log(`   ✓ ICP: ${parsed.icp.slice(0, 80)}...`);

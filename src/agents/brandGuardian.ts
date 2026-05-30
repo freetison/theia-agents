@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { BrandGuardianOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -10,7 +10,7 @@ export async function brandGuardianNode(
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("brand_guardian", {
+  const raw = await llmGenerate("brand_guardian", loadPrompt("brand_guardian", {
     BIZ_ICP: state.bizOutput.icp,
     BIZ_PROBLEM_STATEMENT: state.bizOutput.problem_statement,
     BIZ_VALUE_PROP: state.bizOutput.value_proposition,

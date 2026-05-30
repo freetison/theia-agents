@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { CustomerSuccessOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -13,7 +13,7 @@ export async function customerSuccessNode(
   if (!state.cxoOutput) throw new Error("cxoOutput no disponible");
   if (!state.salesOutput) throw new Error("salesOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("customer_success", {
+  const raw = await llmGenerate("customer_success", loadPrompt("customer_success", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
     CXO_OUTPUT: JSON.stringify(state.cxoOutput, null, 2),

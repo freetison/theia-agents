@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { ProductManagerOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -12,7 +12,7 @@ export async function productManagerNode(
   if (!state.brandOutput) throw new Error("brandOutput no disponible");
   if (!state.softwareArchitectOutput) throw new Error("softwareArchitectOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("product_manager", {
+  const raw = await llmGenerate("product_manager", loadPrompt("product_manager", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),
     ARCH_OUTPUT: JSON.stringify(state.softwareArchitectOutput, null, 2),

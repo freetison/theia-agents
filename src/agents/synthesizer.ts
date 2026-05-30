@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { FinalReportSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -21,7 +21,7 @@ export async function synthesizerNode(
   if (!state.csOutput) throw new Error("csOutput no disponible");
   if (!state.competitorOutput) throw new Error("competitorOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("synthesizer", {
+  const raw = await llmGenerate("synthesizer", loadPrompt("synthesizer", {
     PROBLEM: state.problem,
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),

@@ -1,4 +1,4 @@
-import { ollamaGenerate, extractJson } from "../ollama.js";
+import { llmGenerate, extractJson } from "../llm.js";
 import { CFOFinanceOutputSchema } from "../types.js";
 import { loadPrompt } from "../config.js";
 import type { TheiaState } from "../state.js";
@@ -13,7 +13,7 @@ export async function cfoFinanceNode(
   if (!state.salesOutput) throw new Error("salesOutput no disponible");
   if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
 
-  const raw = await ollamaGenerate(loadPrompt("cfo_finance", {
+  const raw = await llmGenerate("cfo_finance", loadPrompt("cfo_finance", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
     PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
     SALES_OUTPUT: JSON.stringify(state.salesOutput, null, 2),
