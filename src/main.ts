@@ -1,21 +1,28 @@
 import { buildGraph } from "./graph.js";
 import { loadProblem } from "./config.js";
+import { createSessionDir, writeSession } from "./session.js";
 
 // Acepta el problema como argumento CLI: npm start "Mi idea de negocio aquí"
 // Si no se pasa, lee config/problem.txt
 const problem = process.argv[2] ?? loadProblem();
 
 async function main() {
+  const sessionDir = createSessionDir();
+
   console.log("╔══════════════════════════════════════════════════════╗");
   console.log("║      THEIA — Mesa de Trabajo Estratégica             ║");
   console.log("╚══════════════════════════════════════════════════════╝");
-  console.log(`\n📋 Problema:\n${problem}\n`);
+  console.log(`\n📋 Problema:\n${problem}`);
+  console.log(`📁 Sesión: ${sessionDir}\n`);
   console.log("─".repeat(56));
 
   const graph = buildGraph();
   const result = await graph.invoke({ problem });
 
-  // ─── Transcript de la mesa ────────────────────────────────────────────────
+  // ─── Guardar sesión en disco ───────────────────────────────────────────────
+  writeSession(sessionDir, problem, result);
+
+  // ─── Transcript de la mesa (consola) ─────────────────────────────────────
   console.log("\n\n📝  TRANSCRIPT DE LA MESA");
   console.log("─".repeat(56));
   for (const msg of result.tableMessages) {
@@ -29,7 +36,7 @@ async function main() {
   const r = result.finalReport!;
   console.log(`\n  VEREDICTO : ${r.verdict}`);
   console.log(`  SCORE     : ${r.viability_score}/10`);
-  console.log(`  CONFIANZA : ${r.confidence}`);
+  console.log(`  CONFIANZA : ${Math.round(r.confidence * 100)}%`);
   console.log(`\n  RESUMEN   : ${r.summary}`);
   console.log(`\n  Mercados recomendados : ${r.recommended_markets.join(", ")}`);
   console.log(`  Canales de lanzamiento: ${r.launch_channels.join(", ")}`);
@@ -40,8 +47,8 @@ async function main() {
   console.log(`\n  Próximos pasos:`);
   for (const step of r.next_steps) console.log(`    → ${step}`);
 
-  console.log("\n\n🗂️   JSON COMPLETO:");
-  console.log(JSON.stringify(result, null, 2));
+  console.log(`\n\n📁  Sesión guardada en: ${sessionDir}`);
+  console.log(`    result.md + ${result.tableMessages.length} archivos de agentes`);
 }
 
 main().catch((err) => {
