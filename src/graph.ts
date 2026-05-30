@@ -1,5 +1,7 @@
 import { StateGraph, START, END } from "@langchain/langgraph";
 import { GraphState } from "./state.js";
+import type { TheiaState } from "./state.js";
+import { theiaEvents } from "./events.js";
 import { bizEvaluatorNode } from "./agents/bizEvaluator.js";
 import { brandGuardianNode } from "./agents/brandGuardian.js";
 import { growthHackerNode } from "./agents/growthHacker.js";
@@ -14,6 +16,27 @@ import { customerSuccessNode } from "./agents/customerSuccess.js";
 import { competitorAnalystNode } from "./agents/competitorAnalyst.js";
 import { synthesizerNode } from "./agents/synthesizer.js";
 
+// ─── Wrapper: emite "agent:done" cuando el nodo termina ──────────────────────
+
+type NodeFn = (state: TheiaState) => Promise<Partial<TheiaState>>;
+
+function withEvent(fn: NodeFn): NodeFn {
+  return async (state: TheiaState): Promise<Partial<TheiaState>> => {
+    const result = await fn(state);
+    const msg = result.tableMessages?.at(-1);
+    if (msg) {
+      theiaEvents.emit("agent:done", {
+        agent: msg.agent,
+        role: msg.role,
+        timestamp: msg.timestamp,
+        summary: msg.summary,
+        data: result,
+      });
+    }
+    return result;
+  };
+}
+
 // ─── Mesa de trabajo (13 agentes) ────────────────────────────────────────────
 //
 //  START → biz_evaluator → brand_guardian → growth_hacker → software_architect
@@ -23,19 +46,19 @@ import { synthesizerNode } from "./agents/synthesizer.js";
 
 export function buildGraph() {
   return new StateGraph(GraphState)
-    .addNode("biz_evaluator", bizEvaluatorNode)
-    .addNode("brand_guardian", brandGuardianNode)
-    .addNode("growth_hacker", growthHackerNode)
-    .addNode("software_architect", softwareArchitectNode)
-    .addNode("marketing_strategist", marketingStrategistNode)
-    .addNode("product_manager", productManagerNode)
-    .addNode("sales_lead", salesLeadNode)
-    .addNode("cfo_finance", cfoFinanceNode)
-    .addNode("legal_expert", legalExpertNode)
-    .addNode("cxo_designer", cxoDesignerNode)
-    .addNode("customer_success", customerSuccessNode)
-    .addNode("competitor_analyst", competitorAnalystNode)
-    .addNode("synthesizer", synthesizerNode)
+    .addNode("biz_evaluator", withEvent(bizEvaluatorNode))
+    .addNode("brand_guardian", withEvent(brandGuardianNode))
+    .addNode("growth_hacker", withEvent(growthHackerNode))
+    .addNode("software_architect", withEvent(softwareArchitectNode))
+    .addNode("marketing_strategist", withEvent(marketingStrategistNode))
+    .addNode("product_manager", withEvent(productManagerNode))
+    .addNode("sales_lead", withEvent(salesLeadNode))
+    .addNode("cfo_finance", withEvent(cfoFinanceNode))
+    .addNode("legal_expert", withEvent(legalExpertNode))
+    .addNode("cxo_designer", withEvent(cxoDesignerNode))
+    .addNode("customer_success", withEvent(customerSuccessNode))
+    .addNode("competitor_analyst", withEvent(competitorAnalystNode))
+    .addNode("synthesizer", withEvent(synthesizerNode))
     .addEdge(START, "biz_evaluator")
     .addEdge("biz_evaluator", "brand_guardian")
     .addEdge("brand_guardian", "growth_hacker")

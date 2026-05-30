@@ -1,6 +1,6 @@
 import { buildGraph } from "./graph.js";
 import { loadProblem } from "./config.js";
-import { createSessionDir, writeSession } from "./session.js";
+import { createSessionDir, setupSessionListeners, writeResultMd } from "./session.js";
 
 // Acepta el problema como argumento CLI: npm start "Mi idea de negocio aquí"
 // Si no se pasa, lee config/problem.txt
@@ -8,6 +8,7 @@ const problem = process.argv[2] ?? loadProblem();
 
 async function main() {
   const sessionDir = createSessionDir();
+  setupSessionListeners(sessionDir);
 
   console.log("╔══════════════════════════════════════════════════════╗");
   console.log("║      THEIA — Mesa de Trabajo Estratégica             ║");
@@ -20,7 +21,9 @@ async function main() {
   const result = await graph.invoke({ problem });
 
   // ─── Guardar sesión en disco ───────────────────────────────────────────────
-  writeSession(sessionDir, problem, result);
+  if (result.finalReport) {
+    writeResultMd(sessionDir, problem, result.finalReport, result.tableMessages);
+  }
 
   // ─── Transcript de la mesa (consola) ─────────────────────────────────────
   console.log("\n\n📝  TRANSCRIPT DE LA MESA");

@@ -1,8 +1,8 @@
 import { mkdirSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import type { TheiaState } from "./state.js";
 import type { FinalReport } from "./types.js";
+import { theiaEvents, type AgentDoneEvent } from "./events.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SESSIONS_ROOT = join(ROOT, "sessions");
@@ -26,39 +26,25 @@ export function createSessionDir(): string {
   return dir;
 }
 
-// ─── Mapa agente → campo en el estado ────────────────────────────────────────
+// ─── Escuchar eventos de agentes y escribir al disco inmediatamente ───────────
 
-const AGENT_OUTPUT_KEY: Record<string, keyof TheiaState> = {
-  biz_evaluator:        "bizOutput",
-  brand_guardian:       "brandOutput",
-  growth_hacker:        "growthOutput",
-  software_architect:   "softwareArchitectOutput",
-  marketing_strategist: "marketingOutput",
-  product_manager:      "productOutput",
-  sales_lead:           "salesOutput",
-  cfo_finance:          "cfoOutput",
-  legal_expert:         "legalOutput",
-  cxo_designer:         "cxoOutput",
-  customer_success:     "csOutput",
-  competitor_analyst:   "competitorOutput",
-  synthesizer:          "finalReport",
-};
+export function setupSessionListeners(sessionDir: string): void {
+  theiaEvents.on("agent:done", (event: AgentDoneEvent) => {
+    const md = buildAgentMd(event.role, event.agent, event.timestamp, event.summary, event.data);
+    writeFileSync(join(sessionDir, `${event.agent}.md`), md, "utf-8");
+    console.log(`   💾 Guardado: ${event.agent}.md`);
+  });
+}
 
-// ─── Escritura de sesión completa ─────────────────────────────────────────────
+// ─── Escribir resultado final ─────────────────────────────────────────────────
 
-export function writeSession(sessionDir: string, problem: string, result: TheiaState): void {
-  // Un archivo .md por cada agente que tomó la palabra
-  for (const msg of result.tableMessages) {
-    const key = AGENT_OUTPUT_KEY[msg.agent];
-    const data = key ? result[key] : null;
-    const md = buildAgentMd(msg.role, msg.agent, msg.timestamp, msg.summary, data);
-    writeFileSync(join(sessionDir, `${msg.agent}.md`), md, "utf-8");
-  }
-
-  // Informe final
-  if (result.finalReport) {
-    writeFileSync(join(sessionDir, "result.md"), buildResultMd(problem, result.finalReport, result.tableMessages), "utf-8");
-  }
+export function writeResultMd(
+  sessionDir: string,
+  problem: string,
+  r: FinalReport,
+  messages: Array<{ role: string; agent: string; timestamp: string; summary: string }>
+): void {
+  writeFileSync(join(sessionDir, "result.md"), buildResultMd(problem, r, messages), "utf-8");
 }
 
 // ─── Builders ────────────────────────────────────────────────────────────────
@@ -89,7 +75,11 @@ function buildAgentMd(
   ].join("\n");
 }
 
-function buildResultMd(problem: string, r: FinalReport, messages: Array<{ role: string; agent: string; timestamp: string; summary: string }>): string {
+function buildResultMd(
+  problem: string,
+  r: FinalReport,
+  messages: Array<{ role: string; agent: string; timestamp: string; summary: string }>
+): string {
   const verdictIcon = r.verdict === "GO" ? "✅" : r.verdict === "NO-GO" ? "❌" : "⚠️";
   const lines: string[] = [];
 
@@ -152,3 +142,4 @@ function buildResultMd(problem: string, r: FinalReport, messages: Array<{ role: 
 
   return lines.join("\n");
 }
+
