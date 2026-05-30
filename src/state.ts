@@ -1,0 +1,52 @@
+import { Annotation } from "@langchain/langgraph";
+import type {
+  TableMessage,
+  BizEvaluatorOutput,
+  SoftwareArchitectOutput,
+  BrandGuardianOutput,
+  GrowthHackerOutput,
+  FinalReport,
+} from "./types.js";
+
+// Estado compartido de la mesa de trabajo.
+// Todos los agentes leen de aquí y escriben aquí.
+export const GraphState = Annotation.Root({
+  // El problema/oportunidad que se evalúa
+  problem: Annotation<string>(),
+
+  // Transcript de la mesa: cada agente "toma la palabra" y se registra aquí.
+  // El reducer concatena — nunca sobreescribe.
+  tableMessages: Annotation<TableMessage[]>({
+    reducer: (existing: TableMessage[], incoming: TableMessage[]) => [
+      ...existing,
+      ...incoming,
+    ],
+    default: () => [],
+  }),
+
+  // Salidas estructuradas de cada agente (last-write-wins)
+  bizOutput: Annotation<BizEvaluatorOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  softwareArchitectOutput: Annotation<SoftwareArchitectOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  brandOutput: Annotation<BrandGuardianOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  growthOutput: Annotation<GrowthHackerOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+
+  // Veredicto final del facilitador
+  finalReport: Annotation<FinalReport | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+});
+
+export type TheiaState = typeof GraphState.State;
