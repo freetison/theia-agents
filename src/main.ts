@@ -1,24 +1,34 @@
 import { buildGraph } from "./graph.js";
 import { loadProblem } from "./config.js";
 import { createSessionDir, setupSessionListeners, writeResultMd } from "./session.js";
+import { loadProfile, listProfiles } from "./profile.js";
 
-// Acepta el problema como argumento CLI: npm start "Mi idea de negocio aquí"
-// Si no se pasa, lee config/problem.txt
+// CLI: npm start "Mi idea de negocio aquí" [profile_id]
+// Profiles disponibles: it, minorista, mayorista, alimenticio, servicios
 const problem = process.argv[2] ?? loadProblem();
+const profileId = process.argv[3] ?? "it";
 
 async function main() {
+  const profile = loadProfile(profileId);
+
+  const agentContext = Object.fromEntries(
+    Object.entries(profile.agentConfig).map(([k, v]) => [k, v.context ?? ""])
+  );
+
   const sessionDir = createSessionDir();
   setupSessionListeners(sessionDir);
 
   console.log("╔══════════════════════════════════════════════════════╗");
   console.log("║      THEIA — Mesa de Trabajo Estratégica             ║");
   console.log("╚══════════════════════════════════════════════════════╝");
+  console.log(`\n🏷️  Perfil  : ${profile.name} (${profile.id})`);
+  console.log(`🤖 Agentes : ${profile.agents.join(" → ")}`);
   console.log(`\n📋 Problema:\n${problem}`);
-  console.log(`📁 Sesión: ${sessionDir}\n`);
+  console.log(`📁 Sesión  : ${sessionDir}\n`);
   console.log("─".repeat(56));
 
-  const graph = buildGraph();
-  const result = await graph.invoke({ problem });
+  const graph = buildGraph(profile);
+  const result = await graph.invoke({ problem, profileId: profile.id, profileName: profile.name, agentContext });
 
   // ─── Guardar sesión en disco ───────────────────────────────────────────────
   if (result.finalReport) {
@@ -52,6 +62,7 @@ async function main() {
 
   console.log(`\n\n📁  Sesión guardada en: ${sessionDir}`);
   console.log(`    result.md + ${result.tableMessages.length} archivos de agentes`);
+  console.log(`\n💡  Perfiles disponibles: ${listProfiles().join(", ")}`);
 }
 
 main().catch((err) => {

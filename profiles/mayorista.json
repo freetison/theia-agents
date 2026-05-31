@@ -1,0 +1,38 @@
+{
+  "id": "mayorista",
+  "name": "Distribución Mayorista / B2B",
+  "description": "Distribución mayorista, importación/exportación, y negocios B2B de suministro a retailers, restaurantes, cadenas o industrias. Foco en volumen, margen y relaciones comerciales B2B.",
+  "agents": [
+    "biz_evaluator",
+    "growth_hacker",
+    "marketing_strategist",
+    "sales_lead",
+    "cfo_finance",
+    "legal_expert",
+    "competitor_analyst",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate wholesale viability: volume economics, minimum order quantities (MOQ), supply chain stability, customer concentration risk (top 3 clients = what % of revenue?), and barriers to entry for new distributors."
+    },
+    "growth_hacker": {
+      "context": "B2B lead generation: trade show presence, industry association networks, LinkedIn B2B outreach targeting purchasing managers, cold email sequences, and distributor/reseller acquisition programs."
+    },
+    "marketing_strategist": {
+      "context": "Trade marketing: B2B content (product catalogs, spec sheets, case studies, ROI calculators), trade publications, LinkedIn ABM advertising, and co-marketing programs with key accounts."
+    },
+    "sales_lead": {
+      "context": "B2B wholesale sales: key account management structure, volume discount tiers, payment terms negotiation (NET 30/60/90), exclusivity and territorial agreements, and formal distributor onboarding programs."
+    },
+    "cfo_finance": {
+      "context": "Wholesale financials: volume-driven margins (typically 20-40%), accounts receivable aging management, inventory carrying costs, currency risk for imports/exports, and working capital cycle optimization."
+    },
+    "legal_expert": {
+      "context": "B2B commercial law: distribution and supply agreements, exclusivity clauses and territorial rights, payment terms enforcement, product liability in the supply chain, and import/export compliance (customs, tariffs, certificates of origin)."
+    },
+    "competitor_analyst": {
+      "context": "Wholesale competitive dynamics: pricing benchmarks by volume tier, distributor network coverage maps, supplier relationship strength, logistics and fulfillment capabilities, and regional market share analysis."
+    }
+  }
+}

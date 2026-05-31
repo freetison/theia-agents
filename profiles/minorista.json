@@ -1,0 +1,46 @@
+{
+  "id": "minorista",
+  "name": "Retail / Comercio Minorista B2C",
+  "description": "Productos de consumo B2C: moda, calzado, cosméticos, perfumes, hogar, electrónica de consumo, retail físico y e-commerce. Sin necesidad de arquitectura de software ni diseño de producto digital.",
+  "agents": [
+    "biz_evaluator",
+    "brand_guardian",
+    "growth_hacker",
+    "marketing_strategist",
+    "sales_lead",
+    "cfo_finance",
+    "legal_expert",
+    "customer_success",
+    "competitor_analyst",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate retail product viability: product-market fit for end consumers, gross margins after COGS and retail markups (target 50-70%), distribution channel feasibility, and seasonality factors."
+    },
+    "brand_guardian": {
+      "context": "Consumer brand strategy: visual identity, packaging design for shelf impact, brand storytelling, positioning against private labels and competitor brands, and loyalty program design."
+    },
+    "growth_hacker": {
+      "context": "DTC and retail growth: influencer marketing, UGC campaigns, social commerce (Instagram Shopping, TikTok Shop), loyalty/referral programs, seasonal promotions, and marketplace (Amazon, MercadoLibre) optimization."
+    },
+    "marketing_strategist": {
+      "context": "Consumer marketing mix: paid social (Meta, TikTok), in-store promotions, retail media (Amazon Ads, Walmart Connect), seasonal campaigns, and omnichannel (online + brick-and-mortar) strategy."
+    },
+    "sales_lead": {
+      "context": "Retail distribution: pitching department store and multi-brand retailer buyers, online marketplace strategy, DTC e-commerce, and managing retail sell-through and reorder cycles."
+    },
+    "cfo_finance": {
+      "context": "Retail unit economics: COGS, gross margin targets, inventory turnover, markdown risk, working capital for seasonal inventory builds, and cash conversion cycle management."
+    },
+    "legal_expert": {
+      "context": "Consumer product regulations: labeling requirements by country, product safety standards (CE, FDA), consumer protection laws, e-commerce regulations, return/refund policies, and influencer disclosure rules."
+    },
+    "customer_success": {
+      "context": "Post-purchase experience: returns management, customer service SLAs, loyalty programs, product reviews management, NPS for consumer products, and repeat purchase rate improvement."
+    },
+    "competitor_analyst": {
+      "context": "Retail competitive landscape: price positioning at shelf, online marketplace rankings, promotional calendar analysis, private label threats, and category share trends."
+    }
+  }
+}

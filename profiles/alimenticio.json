@@ -1,0 +1,46 @@
+{
+  "id": "alimenticio",
+  "name": "Alimentos y Bebidas",
+  "description": "Productos alimenticios, bebidas, snacks, suplementos nutricionales, y cualquier producto destinado al consumo humano. Regulaciones específicas de inocuidad, etiquetado y salud.",
+  "agents": [
+    "biz_evaluator",
+    "brand_guardian",
+    "growth_hacker",
+    "marketing_strategist",
+    "sales_lead",
+    "cfo_finance",
+    "legal_expert",
+    "customer_success",
+    "competitor_analyst",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate food product viability: shelf life constraints, cold chain requirements, food safety certifications needed (HACCP, BRC, SQF), retail category dynamics, and alignment with consumer health and wellness trends."
+    },
+    "brand_guardian": {
+      "context": "Food brand strategy: packaging design for shelf impact, health claim positioning, certifications as brand equity (organic, non-GMO, gluten-free, Kosher/Halal), and brand storytelling around provenance, ingredients, and sustainability."
+    },
+    "growth_hacker": {
+      "context": "Food brand growth: recipe content marketing (YouTube, TikTok), food blogger and nutritionist outreach, in-store and event sampling campaigns, health community influencers, and social proof through dietitian endorsements."
+    },
+    "marketing_strategist": {
+      "context": "Food marketing: retail shelf placement and planogram strategy, shopper marketing and in-store activations, food media partnerships, seasonal campaigns, and health/wellness positioning in advertising."
+    },
+    "sales_lead": {
+      "context": "Food retail distribution: supermarket and club store buyer negotiations, slotting fees and promotional allowances, food broker/distributor network setup, food service channel (restaurants, hotels, catering), and DTC e-commerce strategy."
+    },
+    "cfo_finance": {
+      "context": "Food economics: COGS including ingredients, packaging, and co-manufacturing costs; spoilage and waste provisions; slotting fees and trade promotion budgets; seasonal demand cash flow management; and minimum viable production run economics."
+    },
+    "legal_expert": {
+      "context": "Food regulations: FDA/COFEPRIS/EFSA compliance by target market, nutritional labeling requirements (Nutrition Facts, front-of-pack warnings), health claim restrictions, HACCP food safety plan requirements, organic certification process, and import/export food permits and phytosanitary certificates."
+    },
+    "customer_success": {
+      "context": "Food consumer loyalty: recipe engagement and community building, subscription food box models, handling product complaints and potential recalls (crisis protocol), and repeat purchase incentive programs."
+    },
+    "competitor_analyst": {
+      "context": "Food competitive landscape: category share by SKU and brand, price-per-unit benchmarks at retail, ingredient trend analysis, private label competition intensity, and health claim differentiation white spaces."
+    }
+  }
+}

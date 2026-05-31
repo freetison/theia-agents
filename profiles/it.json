@@ -1,0 +1,58 @@
+{
+  "id": "it",
+  "name": "Tecnología / Software",
+  "description": "Productos de software, SaaS, aplicaciones móviles, plataformas tecnológicas y startups tech.",
+  "agents": [
+    "biz_evaluator",
+    "software_architect",
+    "product_manager",
+    "brand_guardian",
+    "growth_hacker",
+    "marketing_strategist",
+    "sales_lead",
+    "cfo_finance",
+    "legal_expert",
+    "cxo_designer",
+    "customer_success",
+    "competitor_analyst",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate from a tech startup lens: TAM/SAM/SOM for software markets, technical feasibility, scalability, and defensible moats (IP, network effects, switching costs)."
+    },
+    "software_architect": {
+      "context": "Propose architecture for scale: cloud-native, microservices vs monolith trade-offs, API design, data storage strategy, security-first design, and tech stack selection."
+    },
+    "product_manager": {
+      "context": "Define MVP scope, user stories, product roadmap phases (0-3-6-12 months), success KPIs, and PLG vs sales-led growth model recommendation."
+    },
+    "brand_guardian": {
+      "context": "Build a tech brand: developer trust, thought leadership positioning, open source community potential, and differentiation against established SaaS players."
+    },
+    "growth_hacker": {
+      "context": "Focus on product-led growth (PLG), viral loops, developer communities, Product Hunt launches, freemium/free-trial funnels, and referral programs."
+    },
+    "marketing_strategist": {
+      "context": "B2B/B2C SaaS marketing: content marketing, SEO, developer relations, G2/Capterra review strategy, LinkedIn demand gen, and webinar-based pipeline building."
+    },
+    "sales_lead": {
+      "context": "SaaS sales motion: self-serve, inside sales, enterprise sales cycles, demo-to-trial-to-paid conversion, expansion revenue (upsell/cross-sell), and annual contract value growth."
+    },
+    "cfo_finance": {
+      "context": "SaaS metrics: ARR/MRR, CAC, LTV, churn, burn rate, runway, and unit economics. Funding strategy: bootstrapped vs VC-backed paths and when to raise."
+    },
+    "legal_expert": {
+      "context": "Software IP, open source licenses, data privacy (GDPR, CCPA), SaaS customer agreements, SOC2/ISO27001 compliance roadmap, and employment contracts for remote teams."
+    },
+    "cxo_designer": {
+      "context": "UX/product design: user research, wireframing, design system, accessibility (WCAG 2.1), mobile-first responsive design, and design-to-development handoff."
+    },
+    "customer_success": {
+      "context": "Onboarding flows, activation metrics, health scores, churn prediction signals, NPS tracking, customer education programs, and expansion playbooks."
+    },
+    "competitor_analyst": {
+      "context": "Tech competitor matrix: feature comparison, pricing models, market positioning maps, developer ecosystem strength, funding history, and acquisition risk assessment."
+    }
+  }
+}

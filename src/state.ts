@@ -88,6 +88,21 @@ export const GraphState = Annotation.Root({
     reducer: (_prev, next) => next,
     default: () => null,
   }),
+
+  // Perfil de negocio activo (determina qué agentes participan)
+  profileId: Annotation<string>({
+    reducer: (_prev, next) => next,
+    default: () => "it",
+  }),
+  profileName: Annotation<string>({
+    reducer: (_prev, next) => next,
+    default: () => "",
+  }),
+  // Contexto por agente inyectado desde el perfil (sector-specific prompt context)
+  agentContext: Annotation<Record<string, string>>({
+    reducer: (_prev, next) => next,
+    default: () => ({}),
+  }),
 });
 
 export type TheiaState = typeof GraphState.State;

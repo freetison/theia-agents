@@ -1,0 +1,46 @@
+{
+  "id": "servicios",
+  "name": "Servicios Profesionales",
+  "description": "Agencias, consultoras, firmas de servicios B2B o B2C: marketing, legal, contabilidad, salud, educación, diseño, consultoría de management, y cualquier negocio cuyo producto principal sea un servicio intangible.",
+  "agents": [
+    "biz_evaluator",
+    "brand_guardian",
+    "growth_hacker",
+    "marketing_strategist",
+    "sales_lead",
+    "cfo_finance",
+    "legal_expert",
+    "customer_success",
+    "competitor_analyst",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate service business viability: billable hour economics vs productized services, talent acquisition and retention constraints, geographic scalability (local vs remote-first), and client concentration risk."
+    },
+    "brand_guardian": {
+      "context": "Professional services brand: thought leadership positioning, founder and partner personal brand as trust signals, credentials and case studies as brand equity, and authority markers (media mentions, speaking engagements, certifications)."
+    },
+    "growth_hacker": {
+      "context": "Service business growth: content marketing (blog, podcast, speaking engagements), referral and partner programs, LinkedIn thought leadership funnel, productized service landing pages, and community-led growth."
+    },
+    "marketing_strategist": {
+      "context": "Service marketing: inbound lead generation through content and SEO, case study and testimonial development, webinars and workshops as lead magnets, and niche specialization as a core positioning strategy."
+    },
+    "sales_lead": {
+      "context": "Consultative sales: structured discovery call frameworks, proposal and SOW development, scoping engagements to avoid scope creep, contract negotiation, and optimizing the retainer vs project revenue mix."
+    },
+    "cfo_finance": {
+      "context": "Service firm economics: utilization and realization rates, average billing rate vs fully-loaded cost per hour, revenue per headcount benchmarks, and the strategic transition from time-based to value-based pricing."
+    },
+    "legal_expert": {
+      "context": "Service agreements: SOW and MSA structures, IP ownership clauses (work-for-hire vs retained IP), confidentiality and NDA requirements, liability caps and professional indemnity insurance, and non-compete/non-solicitation clauses."
+    },
+    "customer_success": {
+      "context": "Client retention and expansion: structured Quarterly Business Reviews (QBRs), proactive communication cadence, expanding scope of engagement, measuring and communicating ROI delivered, and systematizing referral generation from satisfied clients."
+    },
+    "competitor_analyst": {
+      "context": "Service competitive positioning: niche vs generalist firm trade-offs, pricing benchmarks by service tier, talent and capability differentiation, geographic competitive dynamics, and partnership vs competition decisions with adjacent firms."
+    }
+  }
+}
