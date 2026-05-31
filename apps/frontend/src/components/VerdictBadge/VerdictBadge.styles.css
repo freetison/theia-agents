@@ -1,0 +1,15 @@
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.verdict--go { background: #dcfce7; color: #16a34a; }
+.verdict--no-go { background: #fee2e2; color: #dc2626; }
+.verdict--conditional { background: #fef9c3; color: #b45309; }
+
+.verdict-badge__score { font-weight: 400; }

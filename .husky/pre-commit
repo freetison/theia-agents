@@ -17,4 +17,12 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+echo "[pre-commit] Running frontend unit tests..."
+pnpm --filter @theia/frontend test
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ COMMIT BLOQUEADO: hay tests en rojo (frontend)."
+  exit 1
+fi
+
 echo "✅ Tests OK — commit autorizado."

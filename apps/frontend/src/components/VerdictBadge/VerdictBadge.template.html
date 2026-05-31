@@ -1,0 +1,4 @@
+<span :class="['verdict-badge', badgeClass]">
+  {{ verdict }}
+  <span v-if="viabilityScore !== undefined" class="verdict-badge__score"> ({{ viabilityScore }}/10)</span>
+</span>

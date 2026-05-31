@@ -25,6 +25,23 @@ export class ProfilesRepo implements IProfileRepo {
     }
   }
 
+  async findById(id: string, tenantId: string): Promise<Result<ProfileRow, DomainError>> {
+    try {
+      const [row] = await this.db
+        .select()
+        .from(profiles)
+        .where(and(eq(profiles.id, id), eq(profiles.tenantId, tenantId), eq(profiles.isActive, true)))
+        .limit(1);
+
+      if (!row) {
+        return err({ code: 'NOT_FOUND', message: `Profile '${id}' not found`, details: {} } as DomainError);
+      }
+      return ok(await this.withAgents(row));
+    } catch (e) {
+      return err({ code: 'INTERNAL', message: String(e), details: {} } as DomainError);
+    }
+  }
+
   async findBySlug(slug: string, tenantId: string): Promise<Result<ProfileRow, DomainError>> {
     try {
       const [row] = await this.db

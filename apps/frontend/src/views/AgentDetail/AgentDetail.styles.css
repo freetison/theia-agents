@@ -1,0 +1,14 @@
+.agent-detail { padding: 24px; max-width: 900px; margin: 0 auto; }
+.agent-detail__title { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; }
+.agent-detail__status,
+.agent-detail__problem { margin-bottom: 8px; font-size: 0.875rem; }
+.agent-detail__json {
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.agent-detail__error { color: #dc2626; }
+.agent-detail__loading { color: #6b7280; }

@@ -17,20 +17,28 @@ import { customerSuccessNode } from "./agents/customerSuccess.js";
 import { competitorAnalystNode } from "./agents/competitorAnalyst.js";
 import { synthesizerNode } from "./agents/synthesizer.js";
 
-// ─── Wrapper: emite "agent:done" cuando el nodo termina ──────────────────────
+// ─── Wrapper: emite "agent:start" y "agent:done" cuando el nodo termina ─────
 
 type NodeFn = (state: TheiaState) => Promise<Partial<TheiaState>>;
 
-function withEvent(fn: NodeFn): NodeFn {
+function withEvent(fn: NodeFn, sessionId?: string, sequence?: number): NodeFn {
   return async (state: TheiaState): Promise<Partial<TheiaState>> => {
+    theiaEvents.emit("agent:start", {
+      sessionId,
+      agent: fn.name || "unknown",
+      sequence: sequence ?? 0,
+      ts: new Date().toISOString(),
+    });
     const result = await fn(state);
     const msg = result.tableMessages?.at(-1);
     if (msg) {
       theiaEvents.emit("agent:done", {
+        sessionId,
         agent: msg.agent,
         role: msg.role,
         timestamp: msg.timestamp,
         summary: msg.summary,
+        confidence: undefined,
         data: result,
       });
     }
@@ -61,7 +69,7 @@ const NODE_REGISTRY: Record<string, NodeFn> = {
 //  Los agentes y su orden de ejecución vienen de profile.agents.
 //  El grafo siempre termina en "synthesizer".
 
-export function buildGraph(profile: Profile) {
+export function buildGraph(profile: Profile, sessionId?: string) {
   if (profile.agents.at(-1) !== "synthesizer") {
     throw new Error(`Profile "${profile.id}": last agent must be "synthesizer"`);
   }
@@ -70,10 +78,11 @@ export function buildGraph(profile: Profile) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let g: any = new StateGraph(GraphState);
 
-  for (const agentId of profile.agents) {
+  for (let i = 0; i < profile.agents.length; i++) {
+    const agentId = profile.agents[i];
     const fn = NODE_REGISTRY[agentId];
     if (!fn) throw new Error(`Unknown agent "${agentId}" in profile "${profile.id}"`);
-    g = g.addNode(agentId, withEvent(fn));
+    g = g.addNode(agentId, withEvent(fn, sessionId, i + 1));
   }
 
   g = g.addEdge(START, profile.agents[0]);

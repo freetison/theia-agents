@@ -1,0 +1,33 @@
+<div class="team-overview">
+  <h1 class="team-overview__title">Theia Agents — Team Overview</h1>
+
+  <div class="team-overview__form">
+    <textarea
+      id="problem-input"
+      class="team-overview__textarea"
+      placeholder="Describe the business problem or opportunity…"
+      rows="4"
+    />
+    <button
+      class="team-overview__run-btn"
+      :disabled="isRunning"
+      @click="handleRunAll"
+    >
+      {{ isRunning ? 'Running…' : 'Run All Agents' }}
+    </button>
+  </div>
+
+  <p v-if="sessionId" class="team-overview__session">Session: {{ sessionId }}</p>
+
+  <div class="team-overview__grid">
+    <AgentCard
+      v-for="agent in agentStatuses"
+      :key="agent.name"
+      :agent-name="agent.name"
+      :status="agent.status"
+      :confidence="agent.confidence"
+      :summary="agent.summary"
+      :error-message="agent.errorMessage"
+    />
+  </div>
+</div>

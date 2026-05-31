@@ -1,0 +1,56 @@
+.team-overview {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.team-overview__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.team-overview__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.team-overview__textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 0.875rem;
+}
+
+.team-overview__run-btn {
+  align-self: flex-end;
+  padding: 10px 24px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.team-overview__run-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.team-overview__session {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.team-overview__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}

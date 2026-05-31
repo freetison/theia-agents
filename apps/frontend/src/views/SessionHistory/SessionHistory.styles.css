@@ -1,0 +1,9 @@
+.session-history { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.session-history__title { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
+.session-history__table { width: 100%; border-collapse: collapse; }
+.session-history__table th,
+.session-history__table td { padding: 8px 12px; border: 1px solid #e5e7eb; text-align: left; font-size: 0.875rem; }
+.session-history__table th { background: #f9fafb; font-weight: 600; }
+.session-history__error { color: #dc2626; }
+.session-history__loading,
+.session-history__empty { color: #6b7280; }

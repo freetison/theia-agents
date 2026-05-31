@@ -4,6 +4,7 @@
  * Concrete classes are NEVER injected — only IXxx interfaces.
  */
 
+import type { Observable } from 'rxjs';
 import type { Result, DomainError } from '@theia-core/result';
 
 // ─── Domain types ────────────────────────────────────────────────────────────
@@ -71,7 +72,7 @@ export interface IPromptsService {
 
 export interface IAgentsService {
   run(request: AgentRunRequest): Promise<Result<void, DomainError>>;
-  streamProgress(sessionId: string): AsyncIterable<AgentProgress>;
+  streamProgress(sessionId: string): Observable<AgentProgress>;
 }
 
 // ─── Injection tokens ─────────────────────────────────────────────────────────
@@ -144,6 +145,7 @@ export interface AgentOutputRow {
 
 export interface IProfileRepo {
   findAll(tenantId: string): Promise<Result<ProfileRow[], DomainError>>;
+  findById(id: string, tenantId: string): Promise<Result<ProfileRow, DomainError>>;
   findBySlug(slug: string, tenantId: string): Promise<Result<ProfileRow, DomainError>>;
   upsert(profile: {
     id?: string;

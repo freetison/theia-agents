@@ -1,0 +1,9 @@
+<div :class="['agent-card', statusClass]">
+  <div class="agent-card__header">
+    <span class="agent-card__name">{{ displayName }}</span>
+    <span class="agent-card__status">{{ status }}</span>
+  </div>
+  <p v-if="shortSummary" class="agent-card__summary">{{ shortSummary }}</p>
+  <p v-if="errorMessage" class="agent-card__error">{{ errorMessage }}</p>
+  <button v-if="status === 'error'" class="agent-card__retry" data-testid="retry-btn" @click="handleRetry">Retry</button>
+</div>

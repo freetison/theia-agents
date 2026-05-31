@@ -1,0 +1,26 @@
+<div class="session-history">
+  <h2 class="session-history__title">Session History</h2>
+  <p v-if="loading" class="session-history__loading">Loading…</p>
+  <p v-if="errorMsg" class="session-history__error">{{ errorMsg }}</p>
+  <table v-if="!loading && sessions.length > 0" class="session-history__table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Problem</th>
+        <th>Started</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="s in sessions" :key="s.id">
+        <td>{{ s.id.slice(0, 8) }}…</td>
+        <td>{{ s.status }}</td>
+        <td>{{ s.problem }}</td>
+        <td>{{ formatDate(s.createdAt) }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p v-if="!loading && sessions.length === 0 && !errorMsg" class="session-history__empty">
+    No sessions yet.
+  </p>
+</div>
