@@ -25,6 +25,8 @@ export class GitHubCopilotProvider implements IProvider {
     });
     if (!response.ok) throw new Error(`GitHub Models ${response.status}: ${await response.text()}`);
     const data = await response.json() as { choices: { message: { content: string } }[] };
-    return data.choices[0].message.content.trim();
+    const content = data.choices[0]?.message?.content;
+    if (!content) throw new Error("GitHub Models returned no content");
+    return content.trim();
   }
 }

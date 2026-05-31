@@ -1,0 +1,32 @@
+{
+  "name": "@theia/engine",
+  "version": "1.0.0",
+  "description": "Theia multi-agent engine (LangGraph + Zod). Pure logic, consumed by CLI/backend.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas.ts",
+    "./providers": "./src/providers/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/core": "0.3.40",
+    "@langchain/langgraph": "^0.2.34",
+    "@theia-core/logging": "^1.0.0",
+    "@theia-core/result": "^1.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.8"
+  }
+}
+

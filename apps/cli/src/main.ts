@@ -1,7 +1,12 @@
-import { buildGraph } from "./graph.js";
-import { loadProblem } from "./config.js";
-import { createSessionDir, setupSessionListeners, writeResultMd } from "./session.js";
-import { loadProfile, listProfiles } from "./profile.js";
+import {
+  buildGraph,
+  loadProblem,
+  createSessionDir,
+  setupSessionListeners,
+  writeResultMd,
+  loadProfile,
+  listProfiles,
+} from "@theia/engine";
 
 // CLI: npm start "Mi idea de negocio aquí" [profile_id]
 // Profiles disponibles: it, minorista, mayorista, alimenticio, servicios

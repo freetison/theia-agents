@@ -21,6 +21,8 @@ export class AnthropicProvider implements IProvider {
     });
     if (!response.ok) throw new Error(`Anthropic ${response.status}: ${await response.text()}`);
     const data = await response.json() as { content: { text: string }[] };
-    return data.content[0].text.trim();
+    const text = data.content[0]?.text;
+    if (!text) throw new Error("Anthropic returned no content");
+    return text.trim();
   }
 }

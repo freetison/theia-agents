@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# Reglas Theia: NUNCA se hace commit sin tests en verde.
+echo "[pre-commit] Running engine unit tests..."
+pnpm --filter @theia/engine test
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ COMMIT BLOQUEADO: hay tests en rojo."
+  echo "   Arregla los tests o usa --no-verify (NO RECOMENDADO)."
+  exit 1
+fi
+echo "✅ Tests OK — commit autorizado."

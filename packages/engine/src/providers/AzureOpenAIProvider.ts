@@ -22,6 +22,8 @@ export class AzureOpenAIProvider implements IProvider {
     });
     if (!response.ok) throw new Error(`Azure OpenAI ${response.status}: ${await response.text()}`);
     const data = await response.json() as { choices: { message: { content: string } }[] };
-    return data.choices[0].message.content.trim();
+    const content = data.choices[0]?.message?.content;
+    if (!content) throw new Error("Azure OpenAI returned no content");
+    return content.trim();
   }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "@theia/cli",
+  "version": "1.0.0",
+  "description": "CLI entry point for Theia multi-agent engine.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "dev": "tsx --watch src/main.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@theia/engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.8"
+  }
+}
