@@ -7,9 +7,10 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { sql } from 'drizzle-orm';
 import { createDb } from './connection';
 
-const ENGINE_ROOT = path.resolve(__dirname, '../../../packages/engine');
+const ENGINE_ROOT = path.resolve(__dirname, '../../../../packages/engine');
 const PROMPTS_DIR = path.join(ENGINE_ROOT, 'config', 'prompts');
 const AGENTS_JSON = path.join(ENGINE_ROOT, 'config', 'agents.json');
 const PROFILES_DIR = path.join(ENGINE_ROOT, 'profiles');
@@ -33,7 +34,7 @@ async function seed(connectionString: string): Promise<void> {
   // 1. Upsert global tenant
   const [globalTenant] = await db
     .execute<{ id: string }>(
-      `INSERT INTO tenants (slug) VALUES ('global')
+      sql`INSERT INTO tenants (slug) VALUES ('global')
        ON CONFLICT (slug) DO UPDATE SET slug = EXCLUDED.slug
        RETURNING id`,
     )
@@ -48,12 +49,15 @@ async function seed(connectionString: string): Promise<void> {
   for (const file of promptFiles) {
     const agentId = path.basename(file, '.txt');
     const template = fs.readFileSync(path.join(PROMPTS_DIR, file), 'utf-8');
+    // NULL tenant_id breaks ON CONFLICT expression; use insert-ignore + update pattern
     await db.execute(
-      `INSERT INTO prompts (tenant_id, agent_id, version, template, is_active)
-       VALUES (NULL, $1, 1, $2, true)
-       ON CONFLICT (COALESCE(tenant_id::text,''), agent_id, version) DO UPDATE
-         SET template = EXCLUDED.template, is_active = EXCLUDED.is_active`,
-      [agentId, template],
+      sql`INSERT INTO prompts (tenant_id, agent_id, version, template, is_active)
+       VALUES (NULL, ${agentId}, 1, ${template}, true)
+       ON CONFLICT DO NOTHING`,
+    );
+    await db.execute(
+      sql`UPDATE prompts SET template = ${template}, is_active = true
+       WHERE tenant_id IS NULL AND agent_id = ${agentId} AND version = 1`,
     );
     console.log(`  ✓ prompt: ${agentId}`);
   }
@@ -64,17 +68,15 @@ async function seed(connectionString: string): Promise<void> {
 
   // Global wildcard default
   await db.execute(
-    `INSERT INTO agent_model_routing (tenant_id, agent_id, provider, model)
-     VALUES (NULL, '*', $1, $2)
+    sql`INSERT INTO agent_model_routing (tenant_id, agent_id, provider, model)
+     VALUES (NULL, '*', ${def.provider}, ${def.model})
      ON CONFLICT DO NOTHING`,
-    [def.provider, def.model],
   );
   for (const [agentId, cfg] of Object.entries(agents)) {
     await db.execute(
-      `INSERT INTO agent_model_routing (tenant_id, agent_id, provider, model)
-       VALUES (NULL, $1, $2, $3)
+      sql`INSERT INTO agent_model_routing (tenant_id, agent_id, provider, model)
+       VALUES (NULL, ${agentId}, ${cfg.provider}, ${cfg.model})
        ON CONFLICT DO NOTHING`,
-      [agentId, cfg.provider, cfg.model],
     );
   }
   console.log(`✓ routing: ${Object.keys(agents).length + 1} rows`);
@@ -86,12 +88,11 @@ async function seed(connectionString: string): Promise<void> {
 
     const [profileRow] = await db
       .execute<{ id: string }>(
-        `INSERT INTO profiles (tenant_id, slug, name, description, version, is_active)
-         VALUES ($1, $2, $3, $4, 1, true)
+        sql`INSERT INTO profiles (tenant_id, slug, name, description, version, is_active)
+         VALUES (${tenantId}, ${profile.id}, ${profile.name}, ${profile.description ?? null}, 1, true)
          ON CONFLICT (tenant_id, slug, version) DO UPDATE
            SET name = EXCLUDED.name, description = EXCLUDED.description, is_active = EXCLUDED.is_active
          RETURNING id`,
-        [tenantId, profile.id, profile.name, profile.description ?? null],
       )
       .then((r) => r.rows);
 
@@ -99,14 +100,13 @@ async function seed(connectionString: string): Promise<void> {
     const profileId = profileRow.id;
 
     // Replace agents for this profile
-    await db.execute(`DELETE FROM profile_agents WHERE profile_id = $1`, [profileId]);
+    await db.execute(sql`DELETE FROM profile_agents WHERE profile_id = ${profileId}`);
     for (let i = 0; i < profile.agents.length; i++) {
       const agentId = profile.agents[i] as string;
       const ctx = profile.agentConfig[agentId]?.context ?? null;
       await db.execute(
-        `INSERT INTO profile_agents (profile_id, agent_id, sequence, context, requires)
-         VALUES ($1, $2, $3, $4, '{}')`,
-        [profileId, agentId, i, ctx],
+        sql`INSERT INTO profile_agents (profile_id, agent_id, sequence, context, requires)
+         VALUES (${profileId}, ${agentId}, ${i}, ${ctx}, '{}')`,
       );
     }
     console.log(`  ✓ profile: ${profile.id} (${profile.agents.length} agents)`);
