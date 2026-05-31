@@ -4,8 +4,17 @@ echo "[pre-commit] Running engine unit tests..."
 pnpm --filter @theia/engine test
 if [ $? -ne 0 ]; then
   echo ""
-  echo "❌ COMMIT BLOQUEADO: hay tests en rojo."
+  echo "❌ COMMIT BLOQUEADO: hay tests en rojo (engine)."
+  exit 1
+fi
+
+echo "[pre-commit] Running backend unit tests..."
+pnpm --filter @theia/backend test
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ COMMIT BLOQUEADO: hay tests en rojo (backend)."
   echo "   Arregla los tests o usa --no-verify (NO RECOMENDADO)."
   exit 1
 fi
+
 echo "✅ Tests OK — commit autorizado."
