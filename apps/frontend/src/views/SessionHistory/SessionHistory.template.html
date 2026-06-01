@@ -13,7 +13,9 @@
     </thead>
     <tbody>
       <tr v-for="s in sessions" :key="s.id">
-        <td>{{ s.id.slice(0, 8) }}…</td>
+        <td>
+          <router-link :to="`/sessions/${s.id}`">{{ s.id.slice(0, 8) }}…</router-link>
+        </td>
         <td>{{ s.status }}</td>
         <td>{{ s.problem }}</td>
         <td>{{ formatDate(s.createdAt) }}</td>

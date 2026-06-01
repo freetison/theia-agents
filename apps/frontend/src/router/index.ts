@@ -9,5 +9,6 @@ export const router = createRouter({
     { path: '/', component: TeamOverview },
     { path: '/sessions', component: SessionHistory },
     { path: '/sessions/:id', component: AgentDetail },
+    { path: '/sessions/:id/agents/:agentId', component: AgentDetail },
   ],
 });

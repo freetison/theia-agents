@@ -1,7 +1,7 @@
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useSession } from '../../composables/useSession';
-import type { SessionSummary } from '../../tokens/SESSIONS_TOKEN';
+import type { SessionSummary, AgentOutput } from '../../tokens/SESSIONS_TOKEN';
 
 export default defineComponent({
   name: 'AgentDetail',
@@ -12,6 +12,26 @@ export default defineComponent({
     const session = ref<SessionSummary | null>(null);
     const loading = ref(false);
     const errorMsg = ref<string | null>(null);
+    const rawExpanded = ref(false);
+
+    const agentId = computed(() => {
+      const id = route.params['agentId'];
+      return typeof id === 'string' ? id : null;
+    });
+
+    const selectedAgent = computed<AgentOutput | null>(() => {
+      if (!agentId.value || !session.value?.agentOutputs) return null;
+      return session.value.agentOutputs.find((o) => o.agentId === agentId.value) ?? null;
+    });
+
+    const selectedAgentConfidence = computed<number | null>(() => {
+      const output = selectedAgent.value?.structuredOutput;
+      if (output !== null && typeof output === 'object') {
+        const confidence = (output as Record<string, unknown>)['confidence'];
+        return typeof confidence === 'number' ? confidence : null;
+      }
+      return null;
+    });
 
     onMounted(async () => {
       const id = route.params['id'];
@@ -30,6 +50,20 @@ export default defineComponent({
       return JSON.stringify(obj, null, 2);
     }
 
-    return { session, loading, errorMsg, formatJson };
+    function toggleRaw(): void {
+      rawExpanded.value = !rawExpanded.value;
+    }
+
+    return {
+      session,
+      loading,
+      errorMsg,
+      agentId,
+      selectedAgent,
+      selectedAgentConfidence,
+      rawExpanded,
+      formatJson,
+      toggleRaw,
+    };
   },
 });

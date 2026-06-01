@@ -17,6 +17,7 @@ export interface SessionSummary {
   status: 'pending' | 'running' | 'completed' | 'error';
   createdAt: string;
   completedAt?: string;
+  agentOutputs?: AgentOutputRow[];
 }
 
 export interface ProfileSummary {

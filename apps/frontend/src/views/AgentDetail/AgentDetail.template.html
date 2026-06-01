@@ -1,10 +1,52 @@
 <div class="agent-detail">
   <p v-if="loading" class="agent-detail__loading">Loading…</p>
   <p v-if="errorMsg" class="agent-detail__error">{{ errorMsg }}</p>
-  <template v-if="session">
+
+  <!-- Agent-specific view when :agentId is in the route -->
+  <template v-if="session && agentId">
+    <nav class="agent-detail__breadcrumb">
+      <router-link :to="`/sessions/${session.id}`">← Session</router-link>
+    </nav>
+
+    <template v-if="selectedAgent">
+      <h2 class="agent-detail__title">{{ selectedAgent.agentId }}</h2>
+      <p class="agent-detail__status">Status: <strong>{{ selectedAgent.status }}</strong></p>
+      <p class="agent-detail__summary">{{ selectedAgent.summary }}</p>
+
+      <div class="agent-detail__confidence" v-if="selectedAgentConfidence !== null">
+        Confidence: <strong>{{ (selectedAgentConfidence * 100).toFixed(0) }}%</strong>
+      </div>
+
+      <h3 class="agent-detail__section-title">Structured Output</h3>
+      <pre class="agent-detail__json">{{ formatJson(selectedAgent.structuredOutput) }}</pre>
+
+      <button class="agent-detail__toggle" @click="toggleRaw">
+        {{ rawExpanded ? 'Hide' : 'Show' }} raw response
+      </button>
+      <pre v-if="rawExpanded" class="agent-detail__json agent-detail__json--raw">{{ formatJson(selectedAgent) }}</pre>
+    </template>
+
+    <p v-else class="agent-detail__error">Agent "{{ agentId }}" not found in this session.</p>
+  </template>
+
+  <!-- Session summary view (default when no :agentId) -->
+  <template v-else-if="session">
     <h2 class="agent-detail__title">Session: {{ session.id }}</h2>
     <p class="agent-detail__status">Status: <strong>{{ session.status }}</strong></p>
     <p class="agent-detail__problem">Problem: {{ session.problem }}</p>
+
+    <template v-if="session.agentOutputs && session.agentOutputs.length > 0">
+      <h3 class="agent-detail__section-title">Agents</h3>
+      <ul class="agent-detail__agents">
+        <li v-for="output in session.agentOutputs" :key="output.agentId" class="agent-detail__agent-item">
+          <router-link :to="`/sessions/${session.id}/agents/${output.agentId}`">
+            {{ output.agentId }}
+          </router-link>
+          — {{ output.status }}
+        </li>
+      </ul>
+    </template>
+
     <pre class="agent-detail__json">{{ formatJson(session) }}</pre>
   </template>
 </div>
