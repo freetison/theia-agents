@@ -17,9 +17,7 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    image: theia-backend:dev
     container_name: theia_backend
     ports:
       - "3000:3000"
@@ -31,15 +29,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    # Uncomment to enable hot-reload during development:
-    # volumes:
-    #   - ./apps/backend/src:/app/apps/backend/src
-    #   - ./packages/engine/src:/app/packages/engine/src
 
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    image: theia-frontend:dev
     container_name: theia_frontend
     ports:
       - "5173:5173"
@@ -48,9 +40,6 @@ services:
       VITE_TENANT_ID: ${TENANT_ID:-ead3c900-58bc-4036-940f-cea3c79e86d4}
     depends_on:
       - backend
-    # Uncomment to enable hot-reload during development:
-    # volumes:
-    #   - ./apps/frontend/src:/app/apps/frontend/src
 
 volumes:
   theia_pgdata:
