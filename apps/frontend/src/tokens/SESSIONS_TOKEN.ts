@@ -31,6 +31,7 @@ export interface SessionSummary {
 export interface ISessionsService {
   findAll(): Promise<SessionSummary[]>;
   findById(id: string): Promise<SessionSummary>;
+  deleteMany(ids: string[]): Promise<void>;
 }
 
 export const SESSIONS_TOKEN: InjectionKey<ISessionsService> = Symbol('ISessionsService');

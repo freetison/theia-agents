@@ -7,7 +7,7 @@
   "scripts": {
     "start": "tsx src/main.ts",
     "dev": "tsx --watch src/main.ts",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@theia/engine": "workspace:*"

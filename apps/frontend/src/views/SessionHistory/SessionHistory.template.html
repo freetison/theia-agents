@@ -1,24 +1,52 @@
 <div class="session-history">
-  <h2 class="session-history__title">Session History</h2>
+  <div class="session-history__header">
+    <h2 class="session-history__title">Session History</h2>
+    <button 
+      class="session-history__delete-btn" 
+      v-if="selectedIds.size > 0" 
+      @click="deleteSelected" 
+      :disabled="isDeleting"
+    >
+      {{ isDeleting ? 'Deleting...' : 'Delete Selected' }}
+    </button>
+  </div>
   <p v-if="loading" class="session-history__loading">Loading…</p>
   <p v-if="errorMsg" class="session-history__error">{{ errorMsg }}</p>
   <table v-if="!loading && sessions.length > 0" class="session-history__table">
     <thead>
       <tr>
+        <th>
+          <input 
+            type="checkbox" 
+            @change="toggleAll" 
+            :checked="selectedIds.size === sessions.length && sessions.length > 0"
+          />
+        </th>
         <th>ID</th>
         <th>Status</th>
         <th>Problem</th>
         <th>Started</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="s in sessions" :key="s.id">
+        <td>
+          <input 
+            type="checkbox" 
+            :checked="selectedIds.has(s.id)" 
+            @change="toggleSelection(s.id)" 
+          />
+        </td>
         <td>
           <router-link :to="`/sessions/${s.id}`">{{ s.id.slice(0, 8) }}…</router-link>
         </td>
         <td>{{ s.status }}</td>
         <td>{{ s.problem }}</td>
         <td>{{ formatDate(s.createdAt) }}</td>
+        <td>
+          <button class="session-history__action-btn" @click="downloadReport(s.id)">Download Report</button>
+        </td>
       </tr>
     </tbody>
   </table>

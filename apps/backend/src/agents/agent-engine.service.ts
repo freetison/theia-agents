@@ -29,6 +29,7 @@ import { SessionStreamRegistry } from './session-stream.registry';
 @Injectable()
 export class AgentEngineService implements IAgentsService, OnModuleDestroy {
   private agentSequence = new Map<string, number>();
+  private readonly pendingWrites = new Map<string, Promise<void>[]>();
 
   constructor(
     @Inject(PROFILE_REPO) private readonly profileRepo: IProfileRepo,
@@ -68,6 +69,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
 
     const session = sessionResult.value;
     this.agentSequence.set(request.sessionId, 0);
+    this.pendingWrites.set(request.sessionId, []);
     this.registry.getOrCreate(request.sessionId);
 
     const engineProfile = toEngineProfile(profileResult.value);
@@ -81,6 +83,8 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
         agentContext: engineProfile.agentConfig,
       });
 
+      await Promise.allSettled(this.pendingWrites.get(request.sessionId) ?? []);
+
       const verdict = finalState?.finalReport?.verdict ?? null;
       const viabilityScore = finalState?.finalReport?.viability_score ?? null;
 
@@ -93,6 +97,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
 
       await this.sessionRepo.updateStatus(session.id, request.tenantId, 'completed', {
         finishedAt: new Date().toISOString(),
+        finalReport: finalState?.finalReport ?? null,
       });
 
       void verdict;
@@ -114,6 +119,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
     } finally {
       this.registry.complete(request.sessionId);
       this.agentSequence.delete(request.sessionId);
+      this.pendingWrites.delete(request.sessionId);
     }
 
     return ok(undefined);
@@ -148,7 +154,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
   };
 
   // Arrow function to preserve 'this' when used as event listener
-  private readonly onAgentDone = async (event: AgentDoneEvent): Promise<void> => {
+  private readonly onAgentDone = (event: AgentDoneEvent): void => {
     const { sessionId } = event;
     if (!sessionId) return;
 
@@ -162,7 +168,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
       confidence: extractConfidence(event.data),
     });
 
-    await this.outputRepo.upsert({
+    const writePromise = this.outputRepo.upsert({
       sessionId,
       agentId: event.agent,
       sequence: seq,
@@ -176,7 +182,15 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
       tokensOut: null,
       costUsd: null,
       status: 'completed',
+    }).then(r => {
+      if (isErr(r)) {
+        console.error(`[AgentEngineService] Failed to save output for session ${sessionId}, agent ${event.agent}:`, r.error);
+      }
     });
+
+    const existing = this.pendingWrites.get(sessionId) ?? [];
+    existing.push(writePromise);
+    this.pendingWrites.set(sessionId, existing);
   };
 }
 

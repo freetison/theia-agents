@@ -2,22 +2,28 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Param,
   Body,
   Req,
+  Res,
   HttpCode,
   HttpStatus,
   HttpException,
   Inject,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiHeader } from '@nestjs/swagger';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { isErr } from '@theia-core/result';
 import { SESSIONS_SERVICE, type ISessionsService } from '../types';
 
 interface CreateSessionDto {
   profileId: string;
   problem: string;
+}
+
+interface DeleteSessionsDto {
+  ids: string[];
 }
 
 @ApiTags('sessions')
@@ -34,6 +40,27 @@ export class SessionsController {
       throw new HttpException(result.error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return result.value;
+  }
+
+  @Delete()
+  @ApiOperation({ summary: 'Delete multiple sessions by id' })
+  async delete(@Body() dto: DeleteSessionsDto, @Req() req: Request) {
+    const result = await this.sessions.delete(dto.ids, req.tenantId);
+    if (isErr(result)) {
+      throw new HttpException(result.error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { success: true };
+  }
+
+  @Get(':id/report')
+  @ApiOperation({ summary: 'Get a human-readable Markdown report for a session' })
+  async getReport(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
+    const result = await this.sessions.getReport(id, req.tenantId);
+    if (isErr(result)) {
+      throw new HttpException(result.error.message, HttpStatus.NOT_FOUND);
+    }
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    res.send(result.value);
   }
 
   @Get(':id')

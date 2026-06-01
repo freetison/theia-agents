@@ -23,7 +23,10 @@ export class AgentsService implements IAgentsService {
 
   private eventSource: EventSource | null = null;
 
-  constructor(private readonly http: IHttpClient) {
+  private http: IHttpClient;
+
+  constructor(http: IHttpClient) {
+    this.http = http;
     this.agentStatuses = ref<AgentStatus[]>([]);
     this.sessionId = ref<string | null>(null);
     this.isRunning = ref(false);

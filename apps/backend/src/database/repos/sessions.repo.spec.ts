@@ -28,7 +28,7 @@ describe('SessionsRepo', () => {
   });
 
   it('creates and retrieves session', async () => {
-    const r = await repo.create({ tenantId, profileId, problem: 'Evaluate B2B', status: 'pending', totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    const r = await repo.create({ tenantId, profileId, problem: 'Evaluate B2B', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
     expect(isOk(r)).toBe(true);
     if (!isOk(r)) return;
 
@@ -40,8 +40,19 @@ describe('SessionsRepo', () => {
     }
   });
 
+  it('creates session with a provided custom id', async () => {
+    const customId = crypto.randomUUID();
+    const r = await repo.create({ id: customId, tenantId, profileId, problem: 'Custom ID test', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    expect(isOk(r)).toBe(true);
+    if (!isOk(r)) return;
+
+    expect(r.value.id).toBe(customId);
+    const found = await repo.findById(customId, tenantId);
+    expect(isOk(found)).toBe(true);
+  });
+
   it('updateStatus changes status', async () => {
-    const created = await repo.create({ tenantId, profileId, problem: 'test', status: 'pending', totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    const created = await repo.create({ tenantId, profileId, problem: 'test', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
     if (!isOk(created)) return;
     const id = created.value.id;
 
@@ -55,8 +66,29 @@ describe('SessionsRepo', () => {
     }
   });
 
+  it('updateStatus saves finalReport', async () => {
+    const created = await repo.create({ tenantId, profileId, problem: 'report test', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    if (!isOk(created)) return;
+    const id = created.value.id;
+
+    const report = { verdict: 'GO', viability_score: 8, summary: 'Looks good', confidence: 0.9 };
+    const upd = await repo.updateStatus(id, tenantId, 'completed', { finishedAt: new Date().toISOString(), finalReport: report });
+    expect(isOk(upd)).toBe(true);
+
+    const found = await repo.findById(id, tenantId);
+    if (isOk(found)) {
+      expect(found.value.finalReport).toMatchObject({ verdict: 'GO', viability_score: 8 });
+    }
+  });
+
+  it('updateStatus returns NOT_FOUND for unknown session id', async () => {
+    const upd = await repo.updateStatus(crypto.randomUUID(), tenantId, 'completed');
+    expect(isErr(upd)).toBe(true);
+    if (isErr(upd)) expect(upd.error.code).toBe('NOT_FOUND');
+  });
+
   it('findById returns NOT_FOUND for wrong tenant', async () => {
-    const created = await repo.create({ tenantId, profileId, problem: 'p', status: 'pending', totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    const created = await repo.create({ tenantId, profileId, problem: 'p', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
     if (!isOk(created)) return;
 
     const wrongTenantId = crypto.randomUUID(); // valid UUID, just doesn't match
@@ -66,7 +98,7 @@ describe('SessionsRepo', () => {
   });
 
   it('findAll only returns sessions for the given tenant', async () => {
-    await repo.create({ tenantId, profileId, problem: 'A', status: 'pending', totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
+    await repo.create({ tenantId, profileId, problem: 'A', status: 'pending', finalReport: null, totalCostUsd: null, totalTokensIn: null, totalTokensOut: null });
     const otherTenantId = crypto.randomUUID(); // valid UUID but no sessions
     const r = await repo.findAll(otherTenantId);
     expect(isOk(r)).toBe(true);

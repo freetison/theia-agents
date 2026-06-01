@@ -18,6 +18,7 @@ export interface SessionSummary {
   createdAt: string;
   completedAt?: string;
   agentOutputs?: AgentOutputRow[];
+  finalReport?: unknown;
 }
 
 export interface ProfileSummary {
@@ -63,6 +64,8 @@ export interface AgentProgress {
 export interface ISessionsService {
   findAll(tenantId: string): Promise<Result<SessionSummary[], DomainError>>;
   findById(id: string, tenantId: string): Promise<Result<SessionSummary, DomainError>>;
+  getReport(id: string, tenantId: string): Promise<Result<string, DomainError>>;
+  delete(ids: string[], tenantId: string): Promise<Result<void, DomainError>>;
   create(
     tenantId: string,
     profileId: string,
@@ -129,6 +132,7 @@ export interface SessionRow {
   status: 'pending' | 'running' | 'completed' | 'failed' | 'partial';
   startedAt: string;
   finishedAt: string | null;
+  finalReport: unknown | null;
   totalCostUsd: string | null;
   totalTokensIn: number | null;
   totalTokensOut: number | null;
@@ -182,13 +186,14 @@ export interface IRoutingRepo {
 export interface ISessionRepo {
   findAll(tenantId: string): Promise<Result<SessionRow[], DomainError>>;
   findById(id: string, tenantId: string): Promise<Result<SessionRow, DomainError>>;
-  create(row: Omit<SessionRow, 'id' | 'startedAt' | 'finishedAt'>): Promise<Result<SessionRow, DomainError>>;
+  create(row: Omit<SessionRow, 'id' | 'startedAt' | 'finishedAt'> & { id?: string }): Promise<Result<SessionRow, DomainError>>;
   updateStatus(
     id: string,
     tenantId: string,
     status: SessionRow['status'],
-    extras?: { finishedAt?: string; totalCostUsd?: string; totalTokensIn?: number; totalTokensOut?: number },
+    extras?: { finishedAt?: string; totalCostUsd?: string; totalTokensIn?: number; totalTokensOut?: number; finalReport?: unknown },
   ): Promise<Result<void, DomainError>>;
+  delete(ids: string[], tenantId: string): Promise<Result<void, DomainError>>;
 }
 
 export interface IAgentOutputRepo {

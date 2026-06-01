@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, inArray } from 'drizzle-orm';
 import { ok, err } from '@theia-core/result';
 import type { Result, DomainError } from '@theia-core/result';
 import type { TheiaDb } from '../connection';
@@ -10,6 +10,18 @@ import { DATABASE_CONNECTION } from '../../types';
 @Injectable()
 export class SessionsRepo implements ISessionRepo {
   constructor(@Inject(DATABASE_CONNECTION) private readonly db: TheiaDb) {}
+
+  async delete(ids: string[], tenantId: string): Promise<Result<void, DomainError>> {
+    if (!ids.length) return ok(undefined);
+    try {
+      await this.db
+        .delete(sessions)
+        .where(and(inArray(sessions.id, ids), eq(sessions.tenantId, tenantId)));
+      return ok(undefined);
+    } catch (e) {
+      return err({ code: 'INTERNAL', message: String(e), details: {} } as DomainError);
+    }
+  }
 
   async findAll(tenantId: string): Promise<Result<SessionRow[], DomainError>> {
     try {
@@ -41,11 +53,12 @@ export class SessionsRepo implements ISessionRepo {
     }
   }
 
-  async create(row: Omit<SessionRow, 'id' | 'startedAt' | 'finishedAt'>): Promise<Result<SessionRow, DomainError>> {
+  async create(row: Omit<SessionRow, 'id' | 'startedAt' | 'finishedAt'> & { id?: string }): Promise<Result<SessionRow, DomainError>> {
     try {
       const [inserted] = await this.db
         .insert(sessions)
         .values({
+          ...(row.id !== undefined ? { id: row.id } : {}),
           tenantId: row.tenantId,
           profileId: row.profileId,
           problem: row.problem,
@@ -69,10 +82,10 @@ export class SessionsRepo implements ISessionRepo {
     id: string,
     tenantId: string,
     status: SessionRow['status'],
-    extras?: { finishedAt?: string; totalCostUsd?: string; totalTokensIn?: number; totalTokensOut?: number },
+    extras?: { finishedAt?: string; totalCostUsd?: string; totalTokensIn?: number; totalTokensOut?: number; finalReport?: unknown },
   ): Promise<Result<void, DomainError>> {
     try {
-      await this.db
+      const updated = await this.db
         .update(sessions)
         .set({
           status: status as typeof sessions.$inferInsert['status'],
@@ -80,8 +93,14 @@ export class SessionsRepo implements ISessionRepo {
           ...(extras?.totalCostUsd !== undefined ? { totalCostUsd: extras.totalCostUsd } : {}),
           ...(extras?.totalTokensIn !== undefined ? { totalTokensIn: extras.totalTokensIn } : {}),
           ...(extras?.totalTokensOut !== undefined ? { totalTokensOut: extras.totalTokensOut } : {}),
+          ...(extras?.finalReport !== undefined ? { finalReport: extras.finalReport } : {}),
         })
-        .where(and(eq(sessions.id, id), eq(sessions.tenantId, tenantId)));
+        .where(and(eq(sessions.id, id), eq(sessions.tenantId, tenantId)))
+        .returning({ id: sessions.id });
+
+      if (updated.length === 0) {
+        return err({ code: 'NOT_FOUND', message: `Session '${id}' not found`, details: {} } as DomainError);
+      }
       return ok(undefined);
     } catch (e) {
       return err({ code: 'INTERNAL', message: String(e), details: {} } as DomainError);
@@ -97,6 +116,7 @@ export class SessionsRepo implements ISessionRepo {
       status: row.status as SessionRow['status'],
       startedAt: row.startedAt.toISOString(),
       finishedAt: row.finishedAt?.toISOString() ?? null,
+      finalReport: row.finalReport ?? null,
       totalCostUsd: row.totalCostUsd,
       totalTokensIn: row.totalTokensIn,
       totalTokensOut: row.totalTokensOut,

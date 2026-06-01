@@ -30,7 +30,20 @@ export class HttpClient implements IHttpClient {
       },
       body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(`POST ${path} → ${res.status}`);
+    if (!res.ok) throw new Error(`POST ${path}  ${res.status}`);
+    return res.json() as Promise<T>;
+  }
+
+  async delete<T>(path: string, body?: unknown): Promise<T> {
+    const res = await fetch(`${this.baseUrl}${path}`, {
+      method: 'DELETE',
+      headers: {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        'X-Tenant-Id': this.tenantId,
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+    if (!res.ok) throw new Error(`DELETE ${path}  ${res.status}`);
     return res.json() as Promise<T>;
   }
 }

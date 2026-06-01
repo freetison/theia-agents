@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { defineComponent, ref } from 'vue';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { defineComponent } from 'vue';
 import { mount } from '@vue/test-utils';
 
 class MockEventSource {
@@ -8,7 +8,10 @@ class MockEventSource {
   onerror: ((ev: Event) => void) | null = null;
   private _closed = false;
 
-  constructor(public readonly url: string) {
+  public url: string;
+
+  constructor(url: string) {
+    this.url = url;
     MockEventSource.instances.push(this);
   }
 
@@ -33,8 +36,6 @@ describe('useSessionStream', () => {
 
   it('opens an EventSource and updates progress on agent:done events', async () => {
     const { useSessionStream } = await import('./useSessionStream');
-
-    const received = ref<string[]>([]);
 
     const Wrapper = defineComponent({
       setup() {

@@ -1,7 +1,6 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
 import componentDef from './ProfileEditor.component';
-export default defineComponent({ ...componentDef });
+export default componentDef;
 </script>
 
 <template src="./ProfileEditor.template.html" />

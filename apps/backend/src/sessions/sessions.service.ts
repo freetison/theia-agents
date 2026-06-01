@@ -9,6 +9,7 @@ import type {
   SessionRow,
 } from '../types';
 import { SESSION_REPO, AGENT_OUTPUT_REPO } from '../types';
+import { buildMarkdownReport } from './report.builder';
 
 function toSummary(row: SessionRow): SessionSummary {
   return {
@@ -35,11 +36,19 @@ export class SessionsService implements ISessionsService {
     return ok(result.value.map(toSummary));
   }
 
+  async delete(ids: string[], tenantId: string): Promise<Result<void, DomainError>> {
+    return this.repo.delete(ids, tenantId);
+  }
+
   async findById(id: string, tenantId: string): Promise<Result<SessionSummary, DomainError>> {
     const result = await this.repo.findById(id, tenantId);
     if (isErr(result)) return result;
 
     const summary = toSummary(result.value);
+
+    if (result.value.finalReport !== null && result.value.finalReport !== undefined) {
+      summary.finalReport = result.value.finalReport;
+    }
 
     const outputsResult = await this.outputRepo.findBySession(id);
     if (!isErr(outputsResult)) {
@@ -47,6 +56,12 @@ export class SessionsService implements ISessionsService {
     }
 
     return ok(summary);
+  }
+
+  async getReport(id: string, tenantId: string): Promise<Result<string, DomainError>> {
+    const result = await this.findById(id, tenantId);
+    if (isErr(result)) return result;
+    return ok(buildMarkdownReport(result.value));
   }
 
   async create(

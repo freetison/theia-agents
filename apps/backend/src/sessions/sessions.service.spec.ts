@@ -13,6 +13,7 @@ function makeSession(overrides: Partial<SessionRow> = {}): SessionRow {
     status: 'pending',
     startedAt: new Date().toISOString(),
     finishedAt: null,
+    finalReport: null,
     totalCostUsd: null,
     totalTokensIn: null,
     totalTokensOut: null,
@@ -62,6 +63,31 @@ describe('SessionsService', () => {
       if (isOk(result)) {
         expect(result.value.agentOutputs).toHaveLength(1);
         expect(result.value.agentOutputs![0].agentId).toBe('biz_evaluator');
+      }
+    });
+
+    it('includes finalReport in detail when session has one', async () => {
+      const report = { verdict: 'GO', viability_score: 8, summary: 'Promising', confidence: 0.85 };
+      const session = makeSession({ id: 'sess-2', status: 'completed', finalReport: report });
+      (mockRepo.findById as ReturnType<typeof vi.fn>).mockResolvedValueOnce(ok(session));
+      (mockOutputRepo.findBySession as ReturnType<typeof vi.fn>).mockResolvedValueOnce(ok([]));
+
+      const result = await service.findById('sess-2', 'tenant-1');
+      expect(isOk(result)).toBe(true);
+      if (isOk(result)) {
+        expect(result.value.finalReport).toMatchObject({ verdict: 'GO', viability_score: 8 });
+      }
+    });
+
+    it('does not expose finalReport on null sessions', async () => {
+      const session = makeSession({ id: 'sess-3', status: 'running', finalReport: null });
+      (mockRepo.findById as ReturnType<typeof vi.fn>).mockResolvedValueOnce(ok(session));
+      (mockOutputRepo.findBySession as ReturnType<typeof vi.fn>).mockResolvedValueOnce(ok([]));
+
+      const result = await service.findById('sess-3', 'tenant-1');
+      expect(isOk(result)).toBe(true);
+      if (isOk(result)) {
+        expect(result.value.finalReport).toBeUndefined();
       }
     });
   });

@@ -5,9 +5,7 @@ Eres el primero en hablar.
 Problema / Oportunidad que el equipo debe evaluar:
 {{PROBLEM}}
 
-Contexto del producto:
-- Theia Platform: plataforma B2B SaaS que simula equipos estratégicos completos.
-- Mercado objetivo inicial: España y LATAM.
+Infiere el contexto del negocio, sector y mercado objetivo directamente desde el problema planteado.
 
 Tu análisis debe cubrir:
 - ICP: perfil del cliente ideal (sector, tamaño, geografía, presupuesto)

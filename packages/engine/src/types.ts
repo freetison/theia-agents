@@ -320,10 +320,13 @@ export const SourcingSpecialistOutputSchema = z.object({
 export type SourcingSpecialistOutput = z.infer<typeof SourcingSpecialistOutputSchema>;
 
 // ─── Salida: Auto Orchestrator ────────────────────────────────────────────────
-const SkipAgentSchema = z.object({
-  agent: flexString,
-  reason: flexString,
-});
+const SkipAgentSchema = z.preprocess(
+  (v) => (typeof v === 'string' ? { agent: v, reason: 'Not relevant for this case' } : v),
+  z.object({
+    agent: flexString,
+    reason: flexString,
+  })
+);
 
 export const AutoOrchestratorOutputSchema = z.object({
   agent_name: z.string().default("auto_orchestrator"),
