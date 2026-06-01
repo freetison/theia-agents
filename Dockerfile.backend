@@ -6,6 +6,10 @@ RUN corepack enable && corepack prepare pnpm@10 --activate
 
 WORKDIR /app
 
+# Pass GitHub token to authenticate against npm.pkg.github.com
+ARG GITHUB_TOKEN
+COPY .npmrc ./
+
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/engine/package.json ./packages/engine/
 COPY apps/backend/package.json ./apps/backend/
