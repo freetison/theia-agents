@@ -1,4 +1,8 @@
 import { defineConfig } from 'vitest/config';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   test: {
@@ -15,7 +19,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@theia/engine': '../../packages/engine/src/index.ts',
+      '@theia/engine': resolve(__dirname, '../../packages/engine/src/index.ts'),
     },
   },
 });

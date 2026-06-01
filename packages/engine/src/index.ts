@@ -29,5 +29,8 @@ export {
   writeResultMd,
 } from "./session.js";
 
+// Agents catalog — static metadata for all known agents
+export { agentsCatalog, type AgentMeta } from "./agents.catalog.js";
+
 // Schemas & types — re-exported via dedicated entry: import from "@theia/engine/schemas"
 export * from "./types.js";
