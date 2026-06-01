@@ -33,11 +33,13 @@ export class AgentsController {
   run(@Body() dto: RunAgentsDto, @Req() req: Request): { sessionId: string; status: string } {
     const sessionId = crypto.randomUUID();
     setImmediate(() => {
-      void this.agents.run({
+      this.agents.run({
         sessionId,
         profileId: dto.profileId,
         problem: dto.problem,
         tenantId: req.tenantId,
+      }).catch((e: unknown) => {
+        console.error(`[AgentsController] run failed for session ${sessionId}:`, e);
       });
     });
     return { sessionId, status: 'accepted' };

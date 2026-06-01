@@ -34,7 +34,7 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
     @Inject(PROFILE_REPO) private readonly profileRepo: IProfileRepo,
     @Inject(SESSION_REPO) private readonly sessionRepo: ISessionRepo,
     @Inject(AGENT_OUTPUT_REPO) private readonly outputRepo: IAgentOutputRepo,
-    private readonly registry: SessionStreamRegistry,
+    @Inject(SessionStreamRegistry) private readonly registry: SessionStreamRegistry,
   ) {
     theiaEvents.on('agent:done', this.onAgentDone);
   }
