@@ -13,6 +13,9 @@ import type {
   CXODesignerOutput,
   CustomerSuccessOutput,
   CompetitorAnalystOutput,
+  RentalSpecialistOutput,
+  SourcingSpecialistOutput,
+  AutoOrchestratorOutput,
   FinalReport,
 } from "./types.js";
 
@@ -79,6 +82,18 @@ export const GraphState = Annotation.Root({
     default: () => null,
   }),
   competitorOutput: Annotation<CompetitorAnalystOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  rentalOutput: Annotation<RentalSpecialistOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  sourcingOutput: Annotation<SourcingSpecialistOutput | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  autoOrchestratorOutput: Annotation<AutoOrchestratorOutput | null>({
     reducer: (_prev, next) => next,
     default: () => null,
   }),

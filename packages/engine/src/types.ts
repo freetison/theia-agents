@@ -253,6 +253,88 @@ export const CompetitorAnalystOutputSchema = z.object({
 });
 export type CompetitorAnalystOutput = z.infer<typeof CompetitorAnalystOutputSchema>;
 
+// ─── Salida: Rental Specialist ────────────────────────────────────────────────
+export const RentalSpecialistOutputSchema = z.object({
+  agent_name: z.string().default("rental_specialist"),
+  asset_category: flexString,
+  ownership_model: flexString,
+  utilization_target: flexString,
+  avg_rental_duration: flexString,
+  seasonal_pattern: flexString,
+  asset_acquisition_cost: flexString,
+  depreciation_years: flexString,
+  maintenance_cost_pct: flexString,
+  daily_rental_price: flexString,
+  breakeven_days: flexString,
+  gross_margin_pct: flexString,
+  logistics_model: flexString,
+  fleet_management: flexString,
+  insurance_requirements: flexStringArray,
+  local_competitors: flexStringArray,
+  pricing_benchmark: flexString,
+  differentiation: flexString,
+  damage_risk: flexString,
+  theft_risk: flexString,
+  demand_volatility: flexString,
+  asset_obsolescence: flexString,
+  confidence: z.number().min(0).max(1),
+});
+export type RentalSpecialistOutput = z.infer<typeof RentalSpecialistOutputSchema>;
+
+// ─── Salida: Sourcing Specialist ──────────────────────────────────────────────
+export const SourcingSpecialistOutputSchema = z.object({
+  agent_name: z.string().default("sourcing_specialist"),
+  product_to_source: flexString,
+  product_specs: flexString,
+  annual_volume_estimate: flexString,
+  cn_suppliers: flexStringArray,
+  cn_unit_cost_range: flexString,
+  cn_moq: flexString,
+  cn_lead_time: flexString,
+  cn_total_landed_cost: flexString,
+  eu_local_suppliers: flexStringArray,
+  eu_unit_cost_range: flexString,
+  eu_lead_time: flexString,
+  eu_advantages: flexStringArray,
+  cost_comparison: flexString,
+  recommended_sourcing_mix: flexString,
+  breakeven_volume: flexString,
+  quality_risk_mitigation: flexString,
+  incoterms_recommended: flexString,
+  customs_duties: flexString,
+  import_compliance: flexString,
+  freight_options: flexString,
+  supply_chain_risk: flexString,
+  quality_risk: flexString,
+  currency_risk: flexString,
+  single_source_risk: flexString,
+  confidence: z.number().min(0).max(1),
+});
+export type SourcingSpecialistOutput = z.infer<typeof SourcingSpecialistOutputSchema>;
+
+// ─── Salida: Auto Orchestrator ────────────────────────────────────────────────
+const SkipAgentSchema = z.object({
+  agent: flexString,
+  reason: flexString,
+});
+
+export const AutoOrchestratorOutputSchema = z.object({
+  agent_name: z.string().default("auto_orchestrator"),
+  business_type: flexString,
+  target_location: flexString,
+  business_stage: flexString,
+  primary_goal: flexString,
+  top_agents: flexStringArray,
+  skip_agents: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(SkipAgentSchema)),
+  critical_questions: flexStringArray,
+  recommended_profile: flexString,
+  opportunity_signal: flexString,
+  biggest_risk: flexString,
+  unique_insight: flexString,
+  confidence: z.number().min(0).max(1),
+});
+export type AutoOrchestratorOutput = z.infer<typeof AutoOrchestratorOutputSchema>;
+
 // ─── Salida: Synthesizer (Facilitador — veredicto final) ──────────────────────
 export const FinalReportSchema = z.object({
   agent_name: z.string().default("synthesizer"),

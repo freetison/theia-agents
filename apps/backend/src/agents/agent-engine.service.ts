@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ok, err, isErr } from '@theia-core/result';
 import type { Result, DomainError } from '@theia-core/result';
 import { buildGraph, theiaEvents } from '@theia/engine';
-import type { AgentDoneEvent } from '@theia/engine';
+import type { AgentDoneEvent, AgentStartEvent } from '@theia/engine';
 import type { Profile as EngineProfile } from '@theia/engine';
 import type {
   IAgentsService,
@@ -36,10 +36,12 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
     @Inject(AGENT_OUTPUT_REPO) private readonly outputRepo: IAgentOutputRepo,
     @Inject(SessionStreamRegistry) private readonly registry: SessionStreamRegistry,
   ) {
+    theiaEvents.on('agent:start', this.onAgentStart);
     theiaEvents.on('agent:done', this.onAgentDone);
   }
 
   onModuleDestroy(): void {
+    theiaEvents.off('agent:start', this.onAgentStart);
     theiaEvents.off('agent:done', this.onAgentDone);
   }
 
@@ -118,6 +120,18 @@ export class AgentEngineService implements IAgentsService, OnModuleDestroy {
   streamProgress(sessionId: string): Observable<AgentProgress> {
     return this.registry.watch(sessionId);
   }
+
+  // Arrow function to preserve 'this' when used as event listener
+  private readonly onAgentStart = (event: AgentStartEvent): void => {
+    const { sessionId } = event;
+    if (!sessionId) return;
+
+    this.registry.emit(sessionId, {
+      sessionId,
+      agentName: event.agent,
+      status: 'started',
+    });
+  };
 
   // Arrow function to preserve 'this' when used as event listener
   private readonly onAgentDone = async (event: AgentDoneEvent): Promise<void> => {

@@ -23,7 +23,12 @@ export default defineComponent({
       if (!profilesService) { profilesError.value = 'Profiles service not available'; return; }
       const result = await profilesService.findAll().catch(() => [] as ProfileDetail[]);
       profiles.value = result;
-      if (result.length > 0) selectedProfileId.value = result[0].id;
+      const autoProfile = result.find((p) => p.slug === 'auto');
+      if (autoProfile) {
+        selectedProfileId.value = autoProfile.id;
+      } else if (result.length > 0) {
+        selectedProfileId.value = result[0].id;
+      }
     });
 
     async function handleRunAll(): Promise<void> {

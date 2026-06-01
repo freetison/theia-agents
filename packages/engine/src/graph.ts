@@ -16,6 +16,9 @@ import { cxoDesignerNode } from "./agents/cxoDesigner.js";
 import { customerSuccessNode } from "./agents/customerSuccess.js";
 import { competitorAnalystNode } from "./agents/competitorAnalyst.js";
 import { synthesizerNode } from "./agents/synthesizer.js";
+import { rentalSpecialistNode } from "./agents/rentalSpecialist.js";
+import { sourcingSpecialistNode } from "./agents/sourcingSpecialist.js";
+import { autoOrchestratorNode } from "./agents/autoOrchestrator.js";
 
 // ─── Wrapper: emite "agent:start" y "agent:done" cuando el nodo termina ─────
 
@@ -62,6 +65,9 @@ const NODE_REGISTRY: Record<string, NodeFn> = {
   customer_success: customerSuccessNode,
   competitor_analyst: competitorAnalystNode,
   synthesizer: synthesizerNode,
+  rental_specialist: rentalSpecialistNode,
+  sourcing_specialist: sourcingSpecialistNode,
+  auto_orchestrator: autoOrchestratorNode,
 };
 
 // ─── Construye el grafo dinámicamente según el perfil activo ─────────────────
