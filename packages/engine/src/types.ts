@@ -38,6 +38,13 @@ const flexStringArray = z.preprocess((v) => {
   return [];
 }, z.array(z.string()));
 
+// ─── Helper: confidence — llama3.2 a veces omite el campo ────────────────────
+const flexConfidence = z.preprocess((v) => {
+  if (typeof v === "number") return Math.min(1, Math.max(0, v));
+  if (typeof v === "string") return Math.min(1, Math.max(0, parseFloat(v) || 0.5));
+  return 0.5;
+}, z.number().min(0).max(1));
+
 // ─── Salida: Arquitecto de Software ──────────────────────────────────────────
 const BuildOrBuyItemSchema = z.object({
   component: flexString,
@@ -91,7 +98,7 @@ export const SoftwareArchitectOutputSchema = z.object({
   ),
   technical_risks: flexStringArray,
   existing_tools_to_evaluate: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type SoftwareArchitectOutput = z.infer<typeof SoftwareArchitectOutputSchema>;
 
@@ -104,7 +111,7 @@ export const BizEvaluatorOutputSchema = z.object({
   pricing_suggestion: flexString,
   channels_recommended: flexStringArray,
   risks: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
   assumptions: flexStringArray,
 });
 export type BizEvaluatorOutput = z.infer<typeof BizEvaluatorOutputSchema>;
@@ -116,7 +123,7 @@ export const BrandGuardianOutputSchema = z.object({
   key_messages: flexStringArray,
   inconsistencies: flexStringArray,
   recommendations: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type BrandGuardianOutput = z.infer<typeof BrandGuardianOutputSchema>;
 
@@ -138,7 +145,7 @@ export const GrowthHackerOutputSchema = z.object({
   ),
   loops_virales: flexStringArray,
   kpi_key: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type GrowthHackerOutput = z.infer<typeof GrowthHackerOutputSchema>;
 
@@ -154,7 +161,7 @@ export const MarketingStrategistOutputSchema = z.object({
   budget_allocation: z.any(),
   risks: flexStringArray,
   assumptions: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type MarketingStrategistOutput = z.infer<typeof MarketingStrategistOutputSchema>;
 
@@ -166,7 +173,7 @@ export const ProductManagerOutputSchema = z.object({
   user_stories: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   success_metrics: z.any(),
   tradeoffs: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type ProductManagerOutput = z.infer<typeof ProductManagerOutputSchema>;
 
@@ -179,7 +186,7 @@ export const SalesLeadOutputSchema = z.object({
   hiring_plan: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   pipeline_projection: z.any(),
   sales_enablement: z.any(),
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type SalesLeadOutput = z.infer<typeof SalesLeadOutputSchema>;
 
@@ -193,7 +200,7 @@ export const CFOFinanceOutputSchema = z.object({
   fundraising_plan: z.any(),
   break_even: z.any(),
   risks: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type CFOFinanceOutput = z.infer<typeof CFOFinanceOutputSchema>;
 
@@ -207,7 +214,7 @@ export const LegalExpertOutputSchema = z.object({
   data_residency: z.any(),
   launch_checklist: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   risks: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type LegalExpertOutput = z.infer<typeof LegalExpertOutputSchema>;
 
@@ -221,7 +228,7 @@ export const CXODesignerOutputSchema = z.object({
   ux_research_plan: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   accessibility: z.any(),
   risks: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type CXODesignerOutput = z.infer<typeof CXODesignerOutputSchema>;
 
@@ -235,7 +242,7 @@ export const CustomerSuccessOutputSchema = z.object({
   metrics_projection: z.any(),
   cs_team_structure: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   risks: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type CustomerSuccessOutput = z.infer<typeof CustomerSuccessOutputSchema>;
 
@@ -249,7 +256,7 @@ export const CompetitorAnalystOutputSchema = z.object({
   swot: z.any(),
   battle_cards: z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(z.any())),
   risks: flexStringArray,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type CompetitorAnalystOutput = z.infer<typeof CompetitorAnalystOutputSchema>;
 
@@ -277,7 +284,7 @@ export const RentalSpecialistOutputSchema = z.object({
   theft_risk: flexString,
   demand_volatility: flexString,
   asset_obsolescence: flexString,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type RentalSpecialistOutput = z.infer<typeof RentalSpecialistOutputSchema>;
 
@@ -308,7 +315,7 @@ export const SourcingSpecialistOutputSchema = z.object({
   quality_risk: flexString,
   currency_risk: flexString,
   single_source_risk: flexString,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type SourcingSpecialistOutput = z.infer<typeof SourcingSpecialistOutputSchema>;
 
@@ -331,7 +338,7 @@ export const AutoOrchestratorOutputSchema = z.object({
   opportunity_signal: flexString,
   biggest_risk: flexString,
   unique_insight: flexString,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type AutoOrchestratorOutput = z.infer<typeof AutoOrchestratorOutputSchema>;
 
@@ -362,6 +369,6 @@ export const FinalReportSchema = z.object({
   key_risks: flexStringArray,
   next_steps: flexStringArray,
   summary: flexString,
-  confidence: z.number().min(0).max(1),
+  confidence: flexConfidence,
 });
 export type FinalReport = z.infer<typeof FinalReportSchema>;
