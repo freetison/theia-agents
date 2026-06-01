@@ -36,11 +36,11 @@ function makeProvide(agentsMock: IAgentsService, profilesMock: IProfilesService)
 }
 
 describe('TeamOverview', () => {
-  it('renders Run All Agents button', () => {
+  it('renders Run button', () => {
     const wrapper = mount(TeamOverview, {
       global: { provide: makeProvide(makeMockService(), makeMockProfiles()) },
     });
-    expect(wrapper.find('button').text()).toBe('Run All Agents');
+    expect(wrapper.find('button').text()).toBe('Run');
   });
 
   it('button is disabled when isRunning is true', () => {

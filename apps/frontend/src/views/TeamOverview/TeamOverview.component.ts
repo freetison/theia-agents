@@ -13,7 +13,7 @@ export default defineComponent({
     const agentsService = useAgents();
     const profilesService = inject(PROFILES_TOKEN);
 
-    const { agentStatuses, isRunning, sessionId, runAllAgents } = agentsService;
+    const { agentStatuses, isRunning, sessionId } = agentsService;
 
     const profiles = ref<ProfileDetail[]>([]);
     const selectedProfileId = ref<string>('');
@@ -28,7 +28,7 @@ export default defineComponent({
 
     async function handleRunAll(): Promise<void> {
       const problem = (document.getElementById('problem-input') as HTMLTextAreaElement | null)?.value ?? '';
-      await runAllAgents(selectedProfileId.value, problem);
+      await agentsService.runAllAgents(selectedProfileId.value, problem);
     }
 
     return {

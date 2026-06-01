@@ -11,9 +11,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('TeamOverview smoke', () => {
-  test('navigates to / and "Run All Agents" button is present and enabled', async ({ page }) => {
+  test('navigates to / and "Run" button is present and enabled', async ({ page }) => {
     await page.goto('/');
-    const button = page.getByRole('button', { name: /run all agents/i });
+    const button = page.getByRole('button', { name: /^run$/i });
     await expect(button).toBeVisible();
     await expect(button).not.toBeDisabled();
   });
