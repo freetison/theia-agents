@@ -6,9 +6,9 @@ RUN corepack enable && corepack prepare pnpm@10 --activate
 
 WORKDIR /app
 
-# Pass GitHub token to authenticate against npm.pkg.github.com
+# Write .npmrc with the actual token value (ARG is shell-expanded in RUN, not in COPY)
 ARG GITHUB_TOKEN
-COPY .npmrc ./
+RUN printf "@theia-core:registry=https://npm.pkg.github.com/\n//npm.pkg.github.com/:_authToken=%s\nauto-install-peers=false\n" "$GITHUB_TOKEN" > .npmrc
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/frontend/package.json ./apps/frontend/
