@@ -16,5 +16,42 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: theia_backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://theia:theia_dev_pass@postgres:5432/theia_dev
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
+      PORT: 3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Uncomment to enable hot-reload during development:
+    # volumes:
+    #   - ./apps/backend/src:/app/apps/backend/src
+    #   - ./packages/engine/src:/app/packages/engine/src
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: theia_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+      VITE_TENANT_ID: ${TENANT_ID:-ead3c900-58bc-4036-940f-cea3c79e86d4}
+    depends_on:
+      - backend
+    # Uncomment to enable hot-reload during development:
+    # volumes:
+    #   - ./apps/frontend/src:/app/apps/frontend/src
+
 volumes:
   theia_pgdata:
+
