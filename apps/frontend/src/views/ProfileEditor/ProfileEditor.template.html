@@ -1,0 +1,61 @@
+<div class="profile-editor">
+  <h2 class="profile-editor__title">Profile Editor</h2>
+
+  <p v-if="loading" class="profile-editor__loading">Loading…</p>
+  <p v-if="errorMsg" class="profile-editor__error">{{ errorMsg }}</p>
+  <p v-if="successMsg" class="profile-editor__success">{{ successMsg }}</p>
+
+  <section class="profile-editor__existing">
+    <h3>Existing Profiles</h3>
+    <ul v-if="profiles.length > 0" class="profile-editor__list">
+      <li v-for="p in profiles" :key="p.id" class="profile-editor__list-item">
+        <strong>{{ p.name }}</strong>
+        <span class="profile-editor__slug">({{ p.slug }})</span>
+        — {{ p.agentCount }} agent(s)
+      </li>
+    </ul>
+    <p v-if="!loading && profiles.length === 0">No profiles yet.</p>
+  </section>
+
+  <section class="profile-editor__form">
+    <h3>Create New Profile</h3>
+    <form @submit.prevent="handleSubmit">
+      <div class="profile-editor__field">
+        <label for="pe-name">Name</label>
+        <input id="pe-name" v-model="formName" type="text" placeholder="My Profile" />
+      </div>
+      <div class="profile-editor__field">
+        <label for="pe-slug">Slug</label>
+        <input id="pe-slug" v-model="formSlug" type="text" placeholder="my-profile" />
+      </div>
+      <div class="profile-editor__field">
+        <label for="pe-desc">Description</label>
+        <input id="pe-desc" v-model="formDescription" type="text" placeholder="Optional description" />
+      </div>
+
+      <div class="profile-editor__agents">
+        <p><strong>Agents</strong> (select at least one):</p>
+        <div v-for="a in agents" :key="a.slug" class="profile-editor__agent-row">
+          <label>
+            <input
+              type="checkbox"
+              :checked="isAgentSelected(a.slug)"
+              @change="toggleAgent(a.slug)"
+            />
+            {{ a.icon }} {{ a.displayName }}
+          </label>
+        </div>
+      </div>
+
+      <p v-if="validationError" class="profile-editor__validation">{{ validationError }}</p>
+
+      <button
+        type="submit"
+        :disabled="!!validationError || saving"
+        class="profile-editor__submit"
+      >
+        {{ saving ? 'Saving…' : 'Create Profile' }}
+      </button>
+    </form>
+  </section>
+</div>

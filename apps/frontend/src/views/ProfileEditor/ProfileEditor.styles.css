@@ -1,0 +1,92 @@
+.profile-editor {
+  padding: 1.5rem;
+  max-width: 640px;
+}
+
+.profile-editor__title {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.profile-editor__loading,
+.profile-editor__error,
+.profile-editor__success,
+.profile-editor__validation {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.profile-editor__error,
+.profile-editor__validation {
+  background: #fee;
+  color: #c00;
+}
+
+.profile-editor__success {
+  background: #efe;
+  color: #060;
+}
+
+.profile-editor__existing {
+  margin-bottom: 2rem;
+}
+
+.profile-editor__list {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-editor__list-item {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-editor__slug {
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+.profile-editor__form h3 {
+  margin-bottom: 0.75rem;
+}
+
+.profile-editor__field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.profile-editor__field label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-editor__field input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.profile-editor__agents {
+  margin-bottom: 1rem;
+}
+
+.profile-editor__agent-row {
+  margin-bottom: 0.25rem;
+}
+
+.profile-editor__submit {
+  padding: 0.5rem 1.25rem;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-editor__submit:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}

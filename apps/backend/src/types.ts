@@ -24,8 +24,16 @@ export interface ProfileSummary {
   id: string;
   tenantId: string | null;
   name: string;
+  slug: string;
   description?: string;
   agentCount: number;
+}
+
+export interface CreateProfileInput {
+  name: string;
+  slug: string;
+  description?: string;
+  agents: Array<{ agentId: string; sequence: number }>;
 }
 
 export interface PromptSummary {
@@ -65,6 +73,7 @@ export interface ISessionsService {
 export interface IProfilesService {
   findAll(tenantId: string): Promise<Result<ProfileSummary[], DomainError>>;
   findById(id: string, tenantId: string): Promise<Result<ProfileSummary, DomainError>>;
+  create(input: CreateProfileInput, tenantId: string): Promise<Result<ProfileSummary, DomainError>>;
 }
 
 export interface IPromptsService {

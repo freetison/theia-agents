@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Body,
   Param,
   Req,
   HttpException,
@@ -10,7 +12,7 @@ import {
 import { ApiOperation, ApiTags, ApiHeader } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { isErr } from '@theia-core/result';
-import { PROFILES_SERVICE, type IProfilesService } from '../types';
+import { PROFILES_SERVICE, type IProfilesService, type CreateProfileInput } from '../types';
 
 @ApiTags('profiles')
 @ApiHeader({ name: 'X-Tenant-Id', required: true })
@@ -34,6 +36,16 @@ export class ProfilesController {
     const result = await this.profiles.findById(id, req.tenantId);
     if (isErr(result)) {
       throw new HttpException(result.error.message, HttpStatus.NOT_FOUND);
+    }
+    return result.value;
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new profile' })
+  async create(@Req() req: Request, @Body() body: CreateProfileInput) {
+    const result = await this.profiles.create(body, req.tenantId);
+    if (isErr(result)) {
+      throw new HttpException(result.error.message, HttpStatus.BAD_REQUEST);
     }
     return result.value;
   }
