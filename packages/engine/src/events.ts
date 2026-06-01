@@ -18,4 +18,10 @@ export interface AgentDoneEvent {
   data: Partial<TheiaState>;
 }
 
+export interface AgentErrorEvent {
+  sessionId?: string;
+  agent: string;
+  error: string;
+}
+
 export const theiaEvents = new EventEmitter();

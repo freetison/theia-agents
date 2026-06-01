@@ -20,7 +20,7 @@ export { registry } from "./providers/ProviderRegistry.js";
 export type { IProvider } from "./providers/IProvider.js";
 
 // Events (singleton — deprecated, will be replaced by per-session dispatcher)
-export { theiaEvents, type AgentDoneEvent, type AgentStartEvent } from "./events.js";
+export { theiaEvents, type AgentDoneEvent, type AgentStartEvent, type AgentErrorEvent } from "./events.js";
 
 // Session persistence helpers (CLI-only — will move to backend repos)
 export {

@@ -20,32 +20,42 @@ import { rentalSpecialistNode } from "./agents/rentalSpecialist.js";
 import { sourcingSpecialistNode } from "./agents/sourcingSpecialist.js";
 import { autoOrchestratorNode } from "./agents/autoOrchestrator.js";
 
-// ─── Wrapper: emite "agent:start" y "agent:done" cuando el nodo termina ─────
+// ─── Wrapper: emite "agent:start", "agent:done" o "agent:error" ───────────────
 
 type NodeFn = (state: TheiaState) => Promise<Partial<TheiaState>>;
 
 function withEvent(fn: NodeFn, sessionId?: string, sequence?: number): NodeFn {
   return async (state: TheiaState): Promise<Partial<TheiaState>> => {
+    const agentName = fn.name || "unknown";
     theiaEvents.emit("agent:start", {
       sessionId,
-      agent: fn.name || "unknown",
+      agent: agentName,
       sequence: sequence ?? 0,
       ts: new Date().toISOString(),
     });
-    const result = await fn(state);
-    const msg = result.tableMessages?.at(-1);
-    if (msg) {
-      theiaEvents.emit("agent:done", {
+    try {
+      const result = await fn(state);
+      const msg = result.tableMessages?.at(-1);
+      if (msg) {
+        theiaEvents.emit("agent:done", {
+          sessionId,
+          agent: msg.agent,
+          role: msg.role,
+          timestamp: msg.timestamp,
+          summary: msg.summary,
+          confidence: undefined,
+          data: result,
+        });
+      }
+      return result;
+    } catch (e) {
+      theiaEvents.emit("agent:error", {
         sessionId,
-        agent: msg.agent,
-        role: msg.role,
-        timestamp: msg.timestamp,
-        summary: msg.summary,
-        confidence: undefined,
-        data: result,
+        agent: agentName,
+        error: e instanceof Error ? e.message : String(e),
       });
+      throw e;
     }
-    return result;
   };
 }
 
