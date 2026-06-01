@@ -1,8 +1,8 @@
-import { defineComponent, computed } from 'vue';
+import { defineComponent, ref, inject, onMounted } from 'vue';
 import { useAgents } from '../../composables/useAgents';
+import { PROFILES_TOKEN } from '../../tokens/PROFILES_TOKEN';
+import type { ProfileDetail } from '../../tokens/PROFILES_TOKEN';
 import AgentCard from '../../components/AgentCard/AgentCard.vue';
-
-const DEFAULT_PROFILE_ID = import.meta.env['VITE_DEFAULT_PROFILE_ID'] ?? '';
 
 export default defineComponent({
   name: 'TeamOverview',
@@ -11,16 +11,24 @@ export default defineComponent({
 
   setup() {
     const agentsService = useAgents();
+    const profilesService = inject(PROFILES_TOKEN);
+
     const { agentStatuses, isRunning, sessionId, runAllAgents } = agentsService;
 
-    const problemText = computed({
-      get: () => (typeof window !== 'undefined' ? (window as any).__problemText ?? '' : ''),
-      set: (v: string) => { if (typeof window !== 'undefined') (window as any).__problemText = v; },
+    const profiles = ref<ProfileDetail[]>([]);
+    const selectedProfileId = ref<string>('');
+    const profilesError = ref<string | null>(null);
+
+    onMounted(async () => {
+      if (!profilesService) { profilesError.value = 'Profiles service not available'; return; }
+      const result = await profilesService.findAll().catch(() => [] as ProfileDetail[]);
+      profiles.value = result;
+      if (result.length > 0) selectedProfileId.value = result[0].id;
     });
 
     async function handleRunAll(): Promise<void> {
       const problem = (document.getElementById('problem-input') as HTMLTextAreaElement | null)?.value ?? '';
-      await runAllAgents(DEFAULT_PROFILE_ID, problem);
+      await runAllAgents(selectedProfileId.value, problem);
     }
 
     return {
@@ -28,6 +36,9 @@ export default defineComponent({
       isRunning,
       sessionId,
       handleRunAll,
+      profiles,
+      selectedProfileId,
+      profilesError,
     };
   },
 });

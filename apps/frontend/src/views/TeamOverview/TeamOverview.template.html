@@ -2,6 +2,25 @@
   <h1 class="team-overview__title">Theia Agents — Team Overview</h1>
 
   <div class="team-overview__form">
+    <div v-if="profilesError" class="team-overview__error">{{ profilesError }}</div>
+
+    <div class="team-overview__profile-row">
+      <label for="profile-select" class="team-overview__label">Profile</label>
+      <select
+        id="profile-select"
+        v-model="selectedProfileId"
+        class="team-overview__select"
+        :disabled="profiles.length === 0 || isRunning"
+      >
+        <option v-if="profiles.length === 0" value="">Loading profiles…</option>
+        <option
+          v-for="p in profiles"
+          :key="p.id"
+          :value="p.id"
+        >{{ p.name }} ({{ p.slug }})</option>
+      </select>
+    </div>
+
     <textarea
       id="problem-input"
       class="team-overview__textarea"
@@ -10,7 +29,7 @@
     />
     <button
       class="team-overview__run-btn"
-      :disabled="isRunning"
+      :disabled="isRunning || !selectedProfileId"
       @click="handleRunAll"
     >
       {{ isRunning ? 'Running…' : 'Run All Agents' }}

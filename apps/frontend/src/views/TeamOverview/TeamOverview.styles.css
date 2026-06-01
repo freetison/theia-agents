@@ -17,6 +17,34 @@
   margin-bottom: 24px;
 }
 
+.team-overview__profile-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-overview__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.team-overview__select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.team-overview__select:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
 .team-overview__textarea {
   width: 100%;
   padding: 12px;
@@ -53,4 +81,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
+}
+
+.team-overview__error {
+  color: #dc2626;
+  font-size: 0.875rem;
 }
