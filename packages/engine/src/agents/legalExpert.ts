@@ -9,13 +9,11 @@ export async function legalExpertNode(
   console.log("\n⚖️   [Legal Expert] Analizando compliance y riesgos legales...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.productOutput) throw new Error("productOutput no disponible");
-  if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
 
   const raw = await llmGenerate("legal_expert", loadPrompt("legal_expert", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
-    MARKETING_OUTPUT: JSON.stringify(state.marketingOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    PRODUCT_OUTPUT: state.productOutput ? JSON.stringify(state.productOutput, null, 2) : "N/A — agent not run in this profile",
+    MARKETING_OUTPUT: state.marketingOutput ? JSON.stringify(state.marketingOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = LegalExpertOutputSchema.parse(extractJson(raw));
 

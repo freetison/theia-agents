@@ -9,15 +9,12 @@ export async function customerSuccessNode(
   console.log("\n🤝  [Customer Success] Definiendo estrategia de retención...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.productOutput) throw new Error("productOutput no disponible");
-  if (!state.cxoOutput) throw new Error("cxoOutput no disponible");
-  if (!state.salesOutput) throw new Error("salesOutput no disponible");
 
   const raw = await llmGenerate("customer_success", loadPrompt("customer_success", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
-    CXO_OUTPUT: JSON.stringify(state.cxoOutput, null, 2),
-    SALES_OUTPUT: JSON.stringify(state.salesOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    PRODUCT_OUTPUT: state.productOutput ? JSON.stringify(state.productOutput, null, 2) : "N/A — agent not run in this profile",
+    CXO_OUTPUT: state.cxoOutput ? JSON.stringify(state.cxoOutput, null, 2) : "N/A — agent not run in this profile",
+    SALES_OUTPUT: state.salesOutput ? JSON.stringify(state.salesOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = CustomerSuccessOutputSchema.parse(extractJson(raw));
 

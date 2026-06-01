@@ -9,13 +9,11 @@ export async function cxoDesignerNode(
   console.log("\n🎨  [CXO Designer] Diseñando UX, personas y onboarding...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.productOutput) throw new Error("productOutput no disponible");
-  if (!state.brandOutput) throw new Error("brandOutput no disponible");
 
   const raw = await llmGenerate("cxo_designer", loadPrompt("cxo_designer", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
-    BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    PRODUCT_OUTPUT: state.productOutput ? JSON.stringify(state.productOutput, null, 2) : "N/A — agent not run in this profile",
+    BRAND_OUTPUT: state.brandOutput ? JSON.stringify(state.brandOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = CXODesignerOutputSchema.parse(extractJson(raw));
 

@@ -9,13 +9,11 @@ export async function marketingStrategistNode(
   console.log("\n📣  [Marketing Strategist] Definiendo estrategia de marketing...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.brandOutput) throw new Error("brandOutput no disponible");
-  if (!state.growthOutput) throw new Error("growthOutput no disponible");
 
   const raw = await llmGenerate("marketing_strategist", loadPrompt("marketing_strategist", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),
-    GROWTH_OUTPUT: JSON.stringify(state.growthOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    BRAND_OUTPUT: state.brandOutput ? JSON.stringify(state.brandOutput, null, 2) : "N/A — agent not run in this profile",
+    GROWTH_OUTPUT: state.growthOutput ? JSON.stringify(state.growthOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = MarketingStrategistOutputSchema.parse(extractJson(raw));
 

@@ -9,7 +9,6 @@ export async function growthHackerNode(
   console.log("\n🚀  [Growth Hacker] Construyendo sobre el análisis...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.brandOutput) throw new Error("brandOutput no disponible");
 
   const raw = await llmGenerate("growth_hacker", loadPrompt("growth_hacker", {
     BIZ_ICP: state.bizOutput.icp,

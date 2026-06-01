@@ -9,13 +9,11 @@ export async function salesLeadNode(
   console.log("\n💼  [Sales Lead] Definiendo estrategia de ventas...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.growthOutput) throw new Error("growthOutput no disponible");
-  if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
 
   const raw = await llmGenerate("sales_lead", loadPrompt("sales_lead", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    GROWTH_OUTPUT: JSON.stringify(state.growthOutput, null, 2),
-    MARKETING_OUTPUT: JSON.stringify(state.marketingOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    GROWTH_OUTPUT: state.growthOutput ? JSON.stringify(state.growthOutput, null, 2) : "N/A — agent not run in this profile",
+    MARKETING_OUTPUT: state.marketingOutput ? JSON.stringify(state.marketingOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = SalesLeadOutputSchema.parse(extractJson(raw));
 

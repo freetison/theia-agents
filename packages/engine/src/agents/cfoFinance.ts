@@ -9,15 +9,12 @@ export async function cfoFinanceNode(
   console.log("\n💰  [CFO Finance] Proyectando finanzas y unit economics...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.productOutput) throw new Error("productOutput no disponible");
-  if (!state.salesOutput) throw new Error("salesOutput no disponible");
-  if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
 
   const raw = await llmGenerate("cfo_finance", loadPrompt("cfo_finance", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    PRODUCT_OUTPUT: JSON.stringify(state.productOutput, null, 2),
-    SALES_OUTPUT: JSON.stringify(state.salesOutput, null, 2),
-    MARKETING_OUTPUT: JSON.stringify(state.marketingOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    PRODUCT_OUTPUT: state.productOutput ? JSON.stringify(state.productOutput, null, 2) : "N/A — agent not run in this profile",
+    SALES_OUTPUT: state.salesOutput ? JSON.stringify(state.salesOutput, null, 2) : "N/A — agent not run in this profile",
+    MARKETING_OUTPUT: state.marketingOutput ? JSON.stringify(state.marketingOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = CFOFinanceOutputSchema.parse(extractJson(raw));
 

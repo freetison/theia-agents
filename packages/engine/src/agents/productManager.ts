@@ -9,13 +9,11 @@ export async function productManagerNode(
   console.log("\n🗂️   [Product Manager] Definiendo roadmap y features...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.brandOutput) throw new Error("brandOutput no disponible");
-  if (!state.softwareArchitectOutput) throw new Error("softwareArchitectOutput no disponible");
 
   const raw = await llmGenerate("product_manager", loadPrompt("product_manager", {
-    BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    BRAND_OUTPUT: JSON.stringify(state.brandOutput, null, 2),
-    ARCH_OUTPUT: JSON.stringify(state.softwareArchitectOutput, null, 2),
+    BIZ_OUTPUT: state.bizOutput ? JSON.stringify(state.bizOutput, null, 2) : "N/A — agent not run in this profile",
+    BRAND_OUTPUT: state.brandOutput ? JSON.stringify(state.brandOutput, null, 2) : "N/A — agent not run in this profile",
+    ARCH_OUTPUT: state.softwareArchitectOutput ? JSON.stringify(state.softwareArchitectOutput, null, 2) : "N/A — agent not run in this profile",
   }));
   const parsed = ProductManagerOutputSchema.parse(extractJson(raw));
 
