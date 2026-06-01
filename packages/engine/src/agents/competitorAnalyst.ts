@@ -9,13 +9,11 @@ export async function competitorAnalystNode(
   console.log("\n🔍  [Competitor Analyst] Analizando panorama competitivo...");
 
   if (!state.bizOutput) throw new Error("bizOutput no disponible");
-  if (!state.marketingOutput) throw new Error("marketingOutput no disponible");
-  if (!state.salesOutput) throw new Error("salesOutput no disponible");
 
   const raw = await llmGenerate("competitor_analyst", loadPrompt("competitor_analyst", {
     BIZ_OUTPUT: JSON.stringify(state.bizOutput, null, 2),
-    MARKETING_OUTPUT: JSON.stringify(state.marketingOutput, null, 2),
-    SALES_OUTPUT: JSON.stringify(state.salesOutput, null, 2),
+    MARKETING_OUTPUT: state.marketingOutput ? JSON.stringify(state.marketingOutput, null, 2) : "N/A — marketing agent not run in this profile",
+    SALES_OUTPUT: state.salesOutput ? JSON.stringify(state.salesOutput, null, 2) : "N/A — sales agent not run in this profile",
   }));
   const parsed = CompetitorAnalystOutputSchema.parse(extractJson(raw));
 
