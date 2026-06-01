@@ -24,9 +24,9 @@ import { autoOrchestratorNode } from "./agents/autoOrchestrator.js";
 
 type NodeFn = (state: TheiaState) => Promise<Partial<TheiaState>>;
 
-function withEvent(fn: NodeFn, sessionId?: string, sequence?: number): NodeFn {
+function withEvent(fn: NodeFn, sessionId?: string, sequence?: number, agentSlug?: string): NodeFn {
   return async (state: TheiaState): Promise<Partial<TheiaState>> => {
-    const agentName = fn.name || "unknown";
+    const agentName = agentSlug ?? fn.name ?? "unknown";
     theiaEvents.emit("agent:start", {
       sessionId,
       agent: agentName,
@@ -98,7 +98,7 @@ export function buildGraph(profile: Profile, sessionId?: string) {
     const agentId = profile.agents[i];
     const fn = NODE_REGISTRY[agentId];
     if (!fn) throw new Error(`Unknown agent "${agentId}" in profile "${profile.id}"`);
-    g = g.addNode(agentId, withEvent(fn, sessionId, i + 1));
+    g = g.addNode(agentId, withEvent(fn, sessionId, i + 1, agentId));
   }
 
   g = g.addEdge(START, profile.agents[0]);
