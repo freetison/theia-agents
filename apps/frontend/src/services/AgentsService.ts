@@ -3,22 +3,6 @@ import type { Ref } from 'vue';
 import type { IHttpClient } from '../tokens/HTTP_TOKEN';
 import type { IAgentsService, AgentStatus } from '../tokens/AGENTS_TOKEN';
 
-const AGENT_NAMES = [
-  'biz_evaluator',
-  'software_architect',
-  'product_manager',
-  'brand_guardian',
-  'growth_hacker',
-  'marketing_strategist',
-  'sales_lead',
-  'cfo_finance',
-  'legal_expert',
-  'cxo_designer',
-  'customer_success',
-  'competitor_analyst',
-  'synthesizer',
-] as const;
-
 interface RunResponse {
   sessionId: string;
   status: string;
@@ -49,7 +33,7 @@ export class AgentsService implements IAgentsService {
 
   async runAllAgents(profileId: string, problem: string): Promise<void> {
     this.isRunning.value = true;
-    this.agentStatuses.value = AGENT_NAMES.map((name) => ({ name, status: 'idle' }));
+    this.agentStatuses.value = [];  // will be populated by SSE events
 
     const response = await this.http.post<RunResponse>('/agents/run', { profileId, problem });
     this.sessionId.value = response.sessionId;

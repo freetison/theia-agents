@@ -83,7 +83,29 @@
   gap: 16px;
 }
 
-.team-overview__error {
-  color: #dc2626;
-  font-size: 0.875rem;
+.team-overview__progress {
+  margin-bottom: 20px;
 }
+
+.team-overview__progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.team-overview__progress-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.team-overview__progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+

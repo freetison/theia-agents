@@ -12,7 +12,7 @@ describe('AgentCard', () => {
 
   it('applies status CSS class', () => {
     const w = mount(AgentCard, { props: { ...baseProps, status: 'running' } });
-    expect(w.find('[class*="card--running"]').exists()).toBe(true);
+    expect(w.find('[class*="agent-card--running"]').exists()).toBe(true);
   });
 
   it('truncates summary to 10 words with ellipsis', () => {

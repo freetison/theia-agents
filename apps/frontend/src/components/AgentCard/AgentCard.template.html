@@ -1,7 +1,8 @@
 <div :class="['agent-card', statusClass]">
   <div class="agent-card__header">
+    <span class="agent-card__icon" :title="status">{{ statusIcon }}</span>
     <span class="agent-card__name">{{ displayName }}</span>
-    <span class="agent-card__status">{{ status }}</span>
+    <span v-if="confidence != null" class="agent-card__confidence">{{ (confidence * 100).toFixed(0) }}%</span>
   </div>
   <p v-if="shortSummary" class="agent-card__summary">{{ shortSummary }}</p>
   <p v-if="errorMessage" class="agent-card__error">{{ errorMessage }}</p>

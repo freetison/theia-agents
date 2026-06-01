@@ -32,7 +32,7 @@ export default defineComponent({
   emits: ['retry'],
 
   setup(props, { emit }) {
-    const statusClass = computed(() => `card--${props.status}`);
+    const statusClass = computed(() => `agent-card--${props.status}`);
 
     const displayName = computed(() =>
       props.agentName.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -50,6 +50,16 @@ export default defineComponent({
       emit('retry', props.agentName);
     }
 
-    return { statusClass, displayName, shortSummary, handleRetry, getSummaryText };
+    const statusIcon = computed(() => {
+      const icons: Record<AgentCardStatus, string> = {
+        idle: '○',
+        running: '⟳',
+        completed: '✓',
+        error: '✕',
+      };
+      return icons[props.status];
+    });
+
+    return { statusClass, statusIcon, displayName, shortSummary, handleRetry, getSummaryText };
   },
 });

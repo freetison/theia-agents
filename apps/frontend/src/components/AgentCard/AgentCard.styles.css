@@ -3,21 +3,51 @@
   border-radius: 8px;
   padding: 12px 16px;
   background: #fff;
+  transition: background 0.3s, border-left-color 0.3s;
 }
 
-.agent-card--idle { border-left: 4px solid #d1d5db; }
-.agent-card--running { border-left: 4px solid #3b82f6; }
-.agent-card--completed { border-left: 4px solid #22c55e; }
-.agent-card--error { border-left: 4px solid #ef4444; }
+.agent-card--idle   { border-left: 4px solid #d1d5db; background: #f9fafb; }
+.agent-card--running {
+  border-left: 4px solid #3b82f6;
+  background: #eff6ff;
+  animation: agent-pulse 1.4s ease-in-out infinite;
+}
+.agent-card--completed { border-left: 4px solid #22c55e; background: #f0fdf4; }
+.agent-card--error     { border-left: 4px solid #ef4444; background: #fef2f2; }
+
+@keyframes agent-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
 
 .agent-card__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
-.agent-card__name { font-weight: 600; }
-.agent-card__status { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; }
+.agent-card__icon {
+  font-size: 1rem;
+  width: 1.2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.agent-card--running  .agent-card__icon { color: #3b82f6; }
+.agent-card--completed .agent-card__icon { color: #16a34a; }
+.agent-card--error    .agent-card__icon { color: #ef4444; }
+.agent-card--idle     .agent-card__icon { color: #9ca3af; }
+
+.agent-card__name { font-weight: 600; flex: 1; }
+
+.agent-card__confidence {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
 .agent-card__summary { margin: 6px 0 0; font-size: 0.875rem; color: #374151; }
-.agent-card__error { margin: 6px 0 0; font-size: 0.875rem; color: #dc2626; }
-.agent-card__retry { margin-top: 8px; padding: 4px 12px; background: #ef4444; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+.agent-card__error   { margin: 6px 0 0; font-size: 0.875rem; color: #dc2626; }
+.agent-card__retry   { margin-top: 8px; padding: 4px 12px; background: #ef4444; color: #fff; border: none; border-radius: 4px; cursor: pointer; }

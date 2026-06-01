@@ -1,4 +1,4 @@
-import { defineComponent, ref, inject, onMounted } from 'vue';
+import { defineComponent, ref, computed, inject, onMounted } from 'vue';
 import { useAgents } from '../../composables/useAgents';
 import { PROFILES_TOKEN } from '../../tokens/PROFILES_TOKEN';
 import type { ProfileDetail } from '../../tokens/PROFILES_TOKEN';
@@ -31,6 +31,14 @@ export default defineComponent({
       await agentsService.runAllAgents(selectedProfileId.value, problem);
     }
 
+    const completedCount = computed(() =>
+      agentStatuses.value.filter((a) => a.status === 'completed' || a.status === 'error').length,
+    );
+    const totalCount = computed(() => agentStatuses.value.length);
+    const progressPct = computed(() =>
+      totalCount.value > 0 ? Math.round((completedCount.value / totalCount.value) * 100) : 0,
+    );
+
     return {
       agentStatuses,
       isRunning,
@@ -39,6 +47,9 @@ export default defineComponent({
       profiles,
       selectedProfileId,
       profilesError,
+      completedCount,
+      totalCount,
+      progressPct,
     };
   },
 });

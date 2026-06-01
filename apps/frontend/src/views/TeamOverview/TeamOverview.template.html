@@ -38,6 +38,16 @@
 
   <p v-if="sessionId" class="team-overview__session">Session: {{ sessionId }}</p>
 
+  <div v-if="isRunning || totalCount > 0" class="team-overview__progress">
+    <div class="team-overview__progress-header">
+      <span>{{ completedCount }} / {{ totalCount }} agents done</span>
+      <span>{{ progressPct }}%</span>
+    </div>
+    <div class="team-overview__progress-bar">
+      <div class="team-overview__progress-fill" :style="{ width: progressPct + '%' }"></div>
+    </div>
+  </div>
+
   <div class="team-overview__grid">
     <AgentCard
       v-for="agent in agentStatuses"
