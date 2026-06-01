@@ -15,11 +15,14 @@ const EXPECTED_SLUGS = [
   'customer_success',
   'competitor_analyst',
   'synthesizer',
+  'rental_specialist',
+  'sourcing_specialist',
+  'auto_orchestrator',
 ];
 
 describe('agentsCatalog', () => {
-  it('contains exactly 13 entries', () => {
-    expect(agentsCatalog).toHaveLength(13);
+  it('contains exactly 16 entries', () => {
+    expect(agentsCatalog).toHaveLength(16);
   });
 
   it.each(EXPECTED_SLUGS)('includes slug "%s"', (slug) => {

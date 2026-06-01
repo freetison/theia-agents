@@ -9,9 +9,9 @@ describe('AgentsCatalogController', () => {
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it('returns 13 agents', () => {
+  it('returns 16 agents', () => {
     const result = controller.findAll();
-    expect(result).toHaveLength(13);
+    expect(result).toHaveLength(16);
   });
 
   it('includes synthesizer slug', () => {

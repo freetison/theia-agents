@@ -88,4 +88,22 @@ export const agentsCatalog: AgentMeta[] = [
     description: 'Produces the final verdict (GO / NO-GO / CONDITIONAL) and viability score.',
     icon: '🧬',
   },
+  {
+    slug: 'rental_specialist',
+    displayName: 'Rental Specialist',
+    description: 'Analyses rental business models: utilization rates, depreciation, seasonal demand, and pricing for equipment, vehicles, or event assets.',
+    icon: '🔑',
+  },
+  {
+    slug: 'sourcing_specialist',
+    displayName: 'Sourcing Specialist',
+    description: 'Finds and compares global suppliers (China, EU, local) — unit cost, MOQ, lead time, shipping, customs — anchored to the target location in the prompt.',
+    icon: '🌐',
+  },
+  {
+    slug: 'auto_orchestrator',
+    displayName: 'Auto Orchestrator',
+    description: 'Reads the initial prompt, detects business category and context, and produces an agent routing plan with priority ranking and rationale.',
+    icon: '🧠',
+  },
 ];

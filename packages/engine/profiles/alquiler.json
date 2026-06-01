@@ -1,0 +1,42 @@
+{
+  "id": "alquiler",
+  "name": "Alquiler & Rental",
+  "description": "Negocios de alquiler de activos: equipos para DJ y eventos, vehículos, maquinaria, espacios, mobiliario, herramientas. Incluye análisis especializado de utilización, amortización, sourcing de activos y competencia local.",
+  "agents": [
+    "biz_evaluator",
+    "rental_specialist",
+    "sourcing_specialist",
+    "competitor_analyst",
+    "marketing_strategist",
+    "cfo_finance",
+    "legal_expert",
+    "customer_success",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "biz_evaluator": {
+      "context": "Evaluate rental business viability: asset-heavy model economics, utilization rate dependencies, seasonality risks, and competitive differentiation in the local market. Focus on barriers to entry and fleet scalability."
+    },
+    "rental_specialist": {
+      "context": "Deep dive into rental-specific economics: utilization rates, depreciation schedules, maintenance reserves, pricing strategy, fleet management, damage/theft mitigation, and insurance requirements."
+    },
+    "sourcing_specialist": {
+      "context": "Find the best sources for the assets to be rented — comparing China (Alibaba, Global Sources), European distributors, and local dealers. Calculate landed cost to the target location and recommend a sourcing mix."
+    },
+    "competitor_analyst": {
+      "context": "Map the local rental market: direct competitors (same asset category), indirect competitors (peer-to-peer platforms like Fat Llama, Airbnb for spaces), and pricing benchmarks in the target location."
+    },
+    "marketing_strategist": {
+      "context": "Rental marketing strategy: SEO for local search (DJ equipment hire [city]), Google Ads, partnerships with event venues and wedding planners, Instagram for visual assets, and seasonal campaign planning."
+    },
+    "cfo_finance": {
+      "context": "Rental financial model: CAPEX for initial fleet, revenue per asset per day, utilization-adjusted revenue forecast, fleet expansion ROI, and cash flow modeling including maintenance reserves and insurance costs."
+    },
+    "legal_expert": {
+      "context": "Rental legal requirements: hire agreement terms (liability, damage, deposit), insurance obligations, data protection for customer records, platform liability if marketplace model, and local permits for delivery vehicles."
+    },
+    "customer_success": {
+      "context": "Customer retention in rental: repeat booking incentives, loyalty programs, post-rental feedback loops, proactive maintenance communication, and upsell opportunities (accessories, extended hires, priority booking)."
+    }
+  }
+}

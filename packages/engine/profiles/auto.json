@@ -1,0 +1,58 @@
+{
+  "id": "auto",
+  "name": "AUTO — Orquestador Inteligente",
+  "description": "El orquestador lee el prompt, detecta el tipo de negocio y produce un plan de routing. Luego todos los agentes relevantes analizan en paralelo. Ideal cuando no sabes qué perfil usar.",
+  "agents": [
+    "auto_orchestrator",
+    "biz_evaluator",
+    "competitor_analyst",
+    "marketing_strategist",
+    "cfo_finance",
+    "legal_expert",
+    "brand_guardian",
+    "growth_hacker",
+    "sales_lead",
+    "customer_success",
+    "rental_specialist",
+    "sourcing_specialist",
+    "synthesizer"
+  ],
+  "agentConfig": {
+    "auto_orchestrator": {
+      "context": "You go first. Analyze the problem, detect business type and location, and produce the routing plan. Your output will guide interpretation of all subsequent agents."
+    },
+    "biz_evaluator": {
+      "context": "Generic cross-domain evaluation. Adapt your ICP and value proposition analysis to whatever business type is in the prompt."
+    },
+    "competitor_analyst": {
+      "context": "Research local and global competitors relevant to the business type and location mentioned in the prompt."
+    },
+    "marketing_strategist": {
+      "context": "Adapt go-to-market strategy to the business type and target location. Consider digital and physical channels relevant to the local market."
+    },
+    "cfo_finance": {
+      "context": "Model unit economics appropriate to the business type detected. Use rental economics if assets are involved, SaaS metrics if software, retail margins if product."
+    },
+    "legal_expert": {
+      "context": "Identify legal and regulatory requirements specific to the target location and business type from the prompt."
+    },
+    "brand_guardian": {
+      "context": "Evaluate brand strategy for the target market and business category. Consider local cultural nuances."
+    },
+    "growth_hacker": {
+      "context": "Design growth experiments appropriate to the business type and location. Prioritize channels that work in the target market."
+    },
+    "sales_lead": {
+      "context": "Develop a sales strategy appropriate to the business model (B2B, B2C, marketplace, rental) in the target location."
+    },
+    "customer_success": {
+      "context": "Plan customer retention and expansion for the detected business type and market."
+    },
+    "rental_specialist": {
+      "context": "If the business involves any form of asset rental (equipment, vehicles, spaces, tools), provide deep rental economics analysis. If not relevant, briefly note it and keep confidence low."
+    },
+    "sourcing_specialist": {
+      "context": "If the business requires physical products or assets to be procured, analyze global sourcing options anchored to the target location from the prompt. If purely digital, note it and keep confidence low."
+    }
+  }
+}
