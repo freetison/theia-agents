@@ -3,9 +3,10 @@ import { BadRequestException } from '@nestjs/common';
 import { TenantMiddleware } from '../middleware/tenant.middleware';
 import type { Request, Response } from 'express';
 
-function makeReq(headerValue?: string | string[]): Request {
+function makeReq(headerValue?: string | string[], queryTenantId?: string): Request {
   return {
     headers: headerValue !== undefined ? { 'x-tenant-id': headerValue } : {},
+    query: queryTenantId !== undefined ? { tenantId: queryTenantId } : {},
   } as unknown as Request;
 }
 
@@ -31,6 +32,19 @@ describe('TenantMiddleware', () => {
     const req = makeReq(['first-tenant', 'ignored']);
     middleware.use(req, res, next);
     expect(req.tenantId).toBe('first-tenant');
+  });
+
+  it('accepts tenantId from query param (SSE fallback)', () => {
+    const req = makeReq(undefined, 'tenant-from-query');
+    middleware.use(req, res, next);
+    expect(req.tenantId).toBe('tenant-from-query');
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('prefers header over query param when both present', () => {
+    const req = makeReq('tenant-header', 'tenant-query');
+    middleware.use(req, res, next);
+    expect(req.tenantId).toBe('tenant-header');
   });
 
   it('throws BadRequestException when header is missing', () => {
