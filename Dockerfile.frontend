@@ -1,0 +1,20 @@
+# Dev-mode frontend — mirrors local `pnpm --filter @theia/frontend dev`
+# Vite dev server bound to 0.0.0.0 so it's reachable from outside the container
+FROM node:20-alpine
+
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/frontend/package.json ./apps/frontend/
+
+RUN pnpm install --frozen-lockfile
+
+COPY apps/frontend/ ./apps/frontend/
+
+EXPOSE 5173
+
+ENV NODE_ENV=development
+
+CMD ["pnpm", "--filter", "@theia/frontend", "exec", "vite", "--host", "0.0.0.0"]
